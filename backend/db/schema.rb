@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_12_014010) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_12_212703) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_12_014010) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.bigint "submission_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["submission_id"], name: "index_comments_on_submission_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "games", force: :cascade do |t|
@@ -104,6 +114,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_12_014010) do
     t.index ["mission_category_id"], name: "index_missions_on_mission_category_id"
   end
 
+  create_table "reactions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "kind"
+    t.bigint "submission_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["submission_id"], name: "index_reactions_on_submission_id"
+    t.index ["user_id"], name: "index_reactions_on_user_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -160,6 +180,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_12_014010) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "comments", "submissions"
+  add_foreign_key "comments", "users"
   add_foreign_key "games", "users", column: "owner_id"
   add_foreign_key "memberships", "games"
   add_foreign_key "memberships", "teams"
@@ -167,6 +189,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_12_014010) do
   add_foreign_key "mission_categories", "games"
   add_foreign_key "missions", "games"
   add_foreign_key "missions", "mission_categories"
+  add_foreign_key "reactions", "submissions"
+  add_foreign_key "reactions", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "submissions", "missions"
   add_foreign_key "submissions", "teams"

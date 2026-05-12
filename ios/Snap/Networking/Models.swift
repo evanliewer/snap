@@ -116,7 +116,40 @@ struct APISubmission: Codable, Identifiable {
     let createdAt: Date?
     let photoUrl: String?
     let videoUrl: String?
-    struct SubmissionUser: Codable { let id: Int; let name: String }
+    var reactionCounts: [String: Int]?
+    var reactionTotal: Int?
+    var myReactions: [String]?
+    var commentCount: Int?
+    struct SubmissionUser: Codable, Hashable { let id: Int; let name: String }
+}
+
+struct APIComment: Codable, Identifiable {
+    let id: Int
+    let submissionId: Int
+    let user: APISubmission.SubmissionUser
+    let body: String
+    let createdAt: Date?
+}
+
+struct CommentsResponse: Codable {
+    let comments: [APIComment]
+}
+
+struct ReactionsPayload: Codable {
+    let submissionId: Int
+    let counts: [String: Int]
+    let mine: [String]
+}
+
+struct PlayerProfile: Codable {
+    let user: APISubmission.SubmissionUser
+    let gameId: Int
+    let team: PlayerTeam?
+    let role: String
+    let totalPoints: Int
+    let submissionCount: Int
+    let submissions: [APISubmission]
+    struct PlayerTeam: Codable { let id: Int; let name: String; let color: String }
 }
 
 struct ActivityResponse: Codable {

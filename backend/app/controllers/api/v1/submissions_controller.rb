@@ -36,13 +36,24 @@ module Api
         end
       end
 
-      # GET /api/v1/missions/:mission_id/submissions
+      # GET /api/v1/missions/:mission_id/submissions[?scope=all|team]
       def index_for_mission
         membership = @mission.game.membership_for(current_user)
         return render json: { error: "Not a member" }, status: :forbidden unless membership
-        scope = @mission.submissions.includes(:team, :user, photo_attachment: :blob).recent.limit(100)
-        scope = scope.where(team_id: membership.team_id) unless @mission.game.admin?(current_user)
-        render json: { submissions: scope.map { |s| SubmissionSerializer.new(s).as_json } }
+
+        scope = @mission.submissions.includes(:team, :user, photo_attachment: :blob).recent.limit(200)
+        is_admin = @mission.game.admin?(current_user)
+        view_scope = params[:scope].presence || "all"
+
+        unless is_admin
+          if view_scope == "team"
+            scope = scope.where(team_id: membership.team_id)
+          else
+            # Everyone sees approved submissions from all teams, plus their own team's full history.
+            scope = scope.where("submissions.status = ? OR submissions.team_id = ?", "approved", membership.team_id)
+          end
+        end
+        render json: { submissions: scope.map { |s| SubmissionSerializer.new(s, viewer: current_user).as_json } }
       end
 
       # GET /api/v1/games/:game_id/submissions[?status=pending]
@@ -50,7 +61,7 @@ module Api
         return render json: { error: "Game admin permission required" }, status: :forbidden unless @game.admin?(current_user)
         scope = @game.submissions.includes(:team, :user, :mission, photo_attachment: :blob).recent.limit(200)
         scope = scope.where(status: params[:status]) if params[:status].present?
-        render json: { submissions: scope.map { |s| SubmissionSerializer.new(s).as_json } }
+        render json: { submissions: scope.map { |s| SubmissionSerializer.new(s, viewer: current_user).as_json } }
       end
 
       # PATCH /api/v1/submissions/:id

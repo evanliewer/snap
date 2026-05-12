@@ -9,6 +9,18 @@ class Submission < ApplicationRecord
   has_one_attached :photo
   has_one_attached :video
 
+  has_many :reactions, dependent: :destroy
+  has_many :comments, -> { order(:created_at) }, dependent: :destroy
+
+  def reaction_counts
+    reactions.group(:kind).count
+  end
+
+  def reacted_kinds_by(user)
+    return [] unless user
+    reactions.where(user_id: user.id).pluck(:kind)
+  end
+
   validates :status, inclusion: { in: STATUSES }
   validate :enforce_team_quota, on: :create
   validate :require_media_for_mission_type

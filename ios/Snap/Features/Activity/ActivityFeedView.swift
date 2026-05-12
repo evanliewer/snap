@@ -25,8 +25,8 @@ struct ActivityFeedView: View {
                             .padding(.top, 4)
                     }
                     LazyVStack(spacing: 16) {
-                        ForEach(events) { event in
-                            ActivityCard(event: event)
+                        ForEach($events) { $event in
+                            ActivityCard(event: $event, gameId: gameId)
                         }
                     }
                     .padding()
@@ -86,15 +86,21 @@ struct ActivityFeedView: View {
 }
 
 struct ActivityCard: View {
-    let event: APISubmission
+    @Binding var event: APISubmission
+    let gameId: Int
+    @State private var showComments = false
+    @State private var showProfile = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 8) {
                 Circle().fill(Color(hex: event.teamColor)).frame(width: 12, height: 12)
                 Text(event.teamName).font(.subheadline.bold())
                 Text("·").foregroundStyle(.secondary)
-                Text(event.user.name).font(.subheadline).foregroundStyle(.secondary)
+                Button { showProfile = true } label: {
+                    Text(event.user.name).font(.subheadline).foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
                 Spacer()
                 Text("+\(event.pointsAwarded)").font(.subheadline.bold()).foregroundStyle(.orange)
             }
@@ -113,8 +119,29 @@ struct ActivityCard: View {
             if let caption = event.caption, !caption.isEmpty {
                 Text(caption).font(.body).foregroundStyle(.secondary)
             }
+            HStack {
+                ReactionBar(submission: $event)
+                Spacer()
+                Button {
+                    showComments = true
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "bubble.left")
+                        Text("\(event.commentCount ?? 0)").font(.caption)
+                    }
+                    .padding(.horizontal, 8).padding(.vertical, 4)
+                    .background(Color.secondary.opacity(0.08), in: Capsule())
+                }
+                .buttonStyle(.plain)
+            }
         }
         .padding()
         .background(.background.secondary, in: RoundedRectangle(cornerRadius: 16))
+        .sheet(isPresented: $showComments) {
+            CommentsSheet(submission: event, onCountChanged: { event.commentCount = $0 })
+        }
+        .sheet(isPresented: $showProfile) {
+            PlayerProfileView(gameId: gameId, userId: event.user.id)
+        }
     }
 }

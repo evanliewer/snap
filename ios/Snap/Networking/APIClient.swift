@@ -227,6 +227,43 @@ final class APIClient {
         _ = try await request("/api/v1/submissions/\(id)", method: "DELETE", body: nil as String?)
     }
 
+    // MARK: Reactions
+
+    func addReaction(submissionId: Int, kind: String) async throws -> ReactionsPayload {
+        try await post("/api/v1/submissions/\(submissionId)/reactions", body: ["kind": kind])
+    }
+
+    func removeReaction(submissionId: Int, kind: String) async throws -> ReactionsPayload {
+        let (data, response) = try await request("/api/v1/submissions/\(submissionId)/reactions?kind=\(kind)", method: "DELETE", body: nil as String?)
+        return try decode(data: data, response: response)
+    }
+
+    // MARK: Comments
+
+    func comments(submissionId: Int) async throws -> CommentsResponse {
+        try await get("/api/v1/submissions/\(submissionId)/comments")
+    }
+
+    func addComment(submissionId: Int, body: String) async throws -> APIComment {
+        try await post("/api/v1/submissions/\(submissionId)/comments", body: ["body": body])
+    }
+
+    func deleteComment(id: Int) async throws {
+        _ = try await request("/api/v1/comments/\(id)", method: "DELETE", body: nil as String?)
+    }
+
+    // MARK: Players
+
+    func playerProfile(gameId: Int, userId: Int) async throws -> PlayerProfile {
+        try await get("/api/v1/games/\(gameId)/players/\(userId)")
+    }
+
+    // MARK: Mission submissions (gallery)
+
+    func missionSubmissions(missionId: Int, scope: String = "all") async throws -> SubmissionsResponse {
+        try await get("/api/v1/missions/\(missionId)/submissions?scope=\(scope)")
+    }
+
     func submitPhoto(missionId: Int, image: UIImage, caption: String?, latitude: Double?, longitude: Double?) async throws -> APISubmission {
         let boundary = "Boundary-\(UUID().uuidString)"
         var request = try buildRequest(path: "/api/v1/missions/\(missionId)/submissions", method: "POST", authed: true)

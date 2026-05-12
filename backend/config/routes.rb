@@ -39,7 +39,12 @@ Rails.application.routes.draw do
         post "submissions", to: "submissions#create"
       end
 
-      resources :submissions, only: %i[update destroy]
+      resources :submissions, only: %i[update destroy] do
+        resource :reactions, only: %i[create destroy]
+        resources :comments, only: %i[index create]
+      end
+      resources :comments, only: %i[destroy]
+      get "games/:game_id/players/:id", to: "players#show", as: :game_player
     end
   end
 

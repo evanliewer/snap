@@ -63,6 +63,15 @@ struct MissionDetailView: View {
         }
         .navigationTitle(mission.title)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                NavigationLink {
+                    MissionGalleryView(mission: mission)
+                } label: {
+                    Image(systemName: "photo.stack")
+                }
+            }
+        }
         .sheet(isPresented: $showCamera) {
             CameraCaptureView { image in
                 pickedImage = image

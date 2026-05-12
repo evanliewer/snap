@@ -1,11 +1,13 @@
 class SubmissionSerializer
   include Rails.application.routes.url_helpers
 
-  def initialize(submission)
+  def initialize(submission, viewer: nil)
     @submission = submission
+    @viewer = viewer
   end
 
   def as_json(*)
+    counts = @submission.reaction_counts
     {
       id: @submission.id,
       mission_id: @submission.mission_id,
@@ -21,7 +23,11 @@ class SubmissionSerializer
       points_awarded: @submission.points_awarded,
       created_at: @submission.created_at,
       photo_url: media_url(@submission.photo),
-      video_url: media_url(@submission.video)
+      video_url: media_url(@submission.video),
+      reaction_counts: counts,
+      reaction_total: counts.values.sum,
+      my_reactions: @submission.reacted_kinds_by(@viewer),
+      comment_count: @submission.comments.size
     }
   end
 

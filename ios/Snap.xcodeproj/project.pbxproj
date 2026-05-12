@@ -17,18 +17,22 @@
 		5E20E5EA353D9F9E4CBB9685 /* MissionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58AAE788D509FE55A60F5A17 /* MissionDetailView.swift */; };
 		65998848A10A252CCF56725A /* CableClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC7842432252409CAC06B6E /* CableClient.swift */; };
 		6CB75008D9D3066245DA2C21 /* CameraCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF29EE86719027707E59CB30 /* CameraCaptureView.swift */; };
+		6DC7FF93927ABA860B9B8452 /* ReactionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACAF6375F3AF9C7FDBD51BF /* ReactionBar.swift */; };
 		73AF2CAB2F1A458F05F6E40B /* GameDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7FF92B9FC212A90B21CAE0F /* GameDetailView.swift */; };
 		962CB98E3C61D2A0A5ACDA9C /* ReviewQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331D48EB5A745EE99A2F80DD /* ReviewQueueView.swift */; };
 		A344FD751D29CC05B28629E2 /* TeamsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6595CAD9532612D3172AE69E /* TeamsView.swift */; };
+		A82FAA57BA922F979C09D6AC /* MissionGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A898565860441D955B7DF4 /* MissionGalleryView.swift */; };
 		A8D693D51BE1F6A314F349F3 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBE12FEF6F5B9C94D13F8FC /* AppState.swift */; };
 		A9F2420B5269651767DEE211 /* GameAdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E904D105CA4E4B12B79AEE9C /* GameAdminView.swift */; };
 		ADE3437F05BFD98B1D3DD808 /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEEA506F80BAD6BAB9669D2 /* QRCodeView.swift */; };
 		B67B42615610BE830F8E46B1 /* SnapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A658863EA1446B831A1BF9DF /* SnapApp.swift */; };
 		B7ECCE12B9539D94A4DD5955 /* MissionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DE91902B2FF80E3349A130 /* MissionsListView.swift */; };
+		BFA1247220F7A5B87EDC1126 /* CommentsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F5A21DCB5455C9849C46E8 /* CommentsSheet.swift */; };
 		C840A4009F19E0EC3590EEB6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4506329C6000E69CDAA97BEA /* Assets.xcassets */; };
 		CAEB8236526A1B18C190E728 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD6FD726B1493B014F6ABB1 /* Models.swift */; };
 		E7760D9BB83CF2A8A02D0EBA /* NewGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368668341407BDCE54517086 /* NewGameView.swift */; };
 		EC4662E72FC2FF3529446580 /* ActivityFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C16F1F31F1438159801DCE4 /* ActivityFeedView.swift */; };
+		F2C48876E8E6257CEBA9C32F /* PlayerProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF5630D9D6DF9F0BEF0B820 /* PlayerProfileView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,23 +46,38 @@
 		4506329C6000E69CDAA97BEA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		56308B54E47EFF3D7DF28A33 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		58AAE788D509FE55A60F5A17 /* MissionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetailView.swift; sourceTree = "<group>"; };
+		5ACAF6375F3AF9C7FDBD51BF /* ReactionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionBar.swift; sourceTree = "<group>"; };
 		6595CAD9532612D3172AE69E /* TeamsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamsView.swift; sourceTree = "<group>"; };
 		6EC7842432252409CAC06B6E /* CableClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CableClient.swift; sourceTree = "<group>"; };
 		77B129C6F8DCE01DD9A90C3E /* LeaderboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardView.swift; sourceTree = "<group>"; };
 		78B24026C08DD8050AA63155 /* JoinGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinGameView.swift; sourceTree = "<group>"; };
+		79F5A21DCB5455C9849C46E8 /* CommentsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsSheet.swift; sourceTree = "<group>"; };
 		7C16F1F31F1438159801DCE4 /* ActivityFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityFeedView.swift; sourceTree = "<group>"; };
 		95DE91902B2FF80E3349A130 /* MissionsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionsListView.swift; sourceTree = "<group>"; };
+		96A898565860441D955B7DF4 /* MissionGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionGalleryView.swift; sourceTree = "<group>"; };
 		A455994D6EB01959622ED798 /* GamesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesListView.swift; sourceTree = "<group>"; };
 		A658863EA1446B831A1BF9DF /* SnapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapApp.swift; sourceTree = "<group>"; };
 		CB35DDDB827EEA0DE57E6417 /* AuthGateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthGateView.swift; sourceTree = "<group>"; };
 		CBEEA506F80BAD6BAB9669D2 /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
 		D7FF92B9FC212A90B21CAE0F /* GameDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDetailView.swift; sourceTree = "<group>"; };
 		E904D105CA4E4B12B79AEE9C /* GameAdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameAdminView.swift; sourceTree = "<group>"; };
+		ECF5630D9D6DF9F0BEF0B820 /* PlayerProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerProfileView.swift; sourceTree = "<group>"; };
 		F09609F83A4F38CC1B6CFB29 /* QRScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerView.swift; sourceTree = "<group>"; };
 		FF29EE86719027707E59CB30 /* CameraCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCaptureView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		0089D32456E760809B77935F /* Engagement */ = {
+			isa = PBXGroup;
+			children = (
+				79F5A21DCB5455C9849C46E8 /* CommentsSheet.swift */,
+				96A898565860441D955B7DF4 /* MissionGalleryView.swift */,
+				ECF5630D9D6DF9F0BEF0B820 /* PlayerProfileView.swift */,
+				5ACAF6375F3AF9C7FDBD51BF /* ReactionBar.swift */,
+			);
+			path = Engagement;
+			sourceTree = "<group>";
+		};
 		1F03650575996D26064AA4FE /* Activity */ = {
 			isa = PBXGroup;
 			children = (
@@ -184,6 +203,7 @@
 				56308B54E47EFF3D7DF28A33 /* MainTabView.swift */,
 				1F03650575996D26064AA4FE /* Activity */,
 				6412523586E6DB76BC584679 /* Auth */,
+				0089D32456E760809B77935F /* Engagement */,
 				7BA51DA8A56FB32D5877CEDB /* Games */,
 				DD9A1E50AEDC43978B452F5F /* Host */,
 				BA56860B5C0E92C8E986A5E3 /* Leaderboard */,
@@ -266,6 +286,7 @@
 				073DB7EBA053EF512517686E /* AuthGateView.swift in Sources */,
 				65998848A10A252CCF56725A /* CableClient.swift in Sources */,
 				6CB75008D9D3066245DA2C21 /* CameraCaptureView.swift in Sources */,
+				BFA1247220F7A5B87EDC1126 /* CommentsSheet.swift in Sources */,
 				A9F2420B5269651767DEE211 /* GameAdminView.swift in Sources */,
 				73AF2CAB2F1A458F05F6E40B /* GameDetailView.swift in Sources */,
 				41E670B92B877361E8123A05 /* GamesListView.swift in Sources */,
@@ -273,11 +294,14 @@
 				1EC7FA4444834CBEC39855F5 /* LeaderboardView.swift in Sources */,
 				4F57C51026A96EFFA9D5CFBB /* MainTabView.swift in Sources */,
 				5E20E5EA353D9F9E4CBB9685 /* MissionDetailView.swift in Sources */,
+				A82FAA57BA922F979C09D6AC /* MissionGalleryView.swift in Sources */,
 				B7ECCE12B9539D94A4DD5955 /* MissionsListView.swift in Sources */,
 				CAEB8236526A1B18C190E728 /* Models.swift in Sources */,
 				E7760D9BB83CF2A8A02D0EBA /* NewGameView.swift in Sources */,
+				F2C48876E8E6257CEBA9C32F /* PlayerProfileView.swift in Sources */,
 				ADE3437F05BFD98B1D3DD808 /* QRCodeView.swift in Sources */,
 				586FAE9FE624F02CACC4C3B5 /* QRScannerView.swift in Sources */,
+				6DC7FF93927ABA860B9B8452 /* ReactionBar.swift in Sources */,
 				962CB98E3C61D2A0A5ACDA9C /* ReviewQueueView.swift in Sources */,
 				B67B42615610BE830F8E46B1 /* SnapApp.swift in Sources */,
 				A344FD751D29CC05B28629E2 /* TeamsView.swift in Sources */,
