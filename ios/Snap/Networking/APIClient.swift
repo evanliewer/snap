@@ -20,7 +20,9 @@ enum APIError: Error {
 final class APIClient {
     static let shared = APIClient()
 
-    /// Override at runtime via Settings or build-time via `API_BASE_URL` env var.
+    static let defaultProductionURL = URL(string: "https://snap-backend-4cav.onrender.com")!
+
+    /// Override at runtime via the API settings sheet on the auth screen.
     var baseURL: URL {
         if let custom = UserDefaults.standard.string(forKey: "snap.api.baseURL"),
            let url = URL(string: custom) {
@@ -29,7 +31,7 @@ final class APIClient {
         #if targetEnvironment(simulator)
         return URL(string: "http://localhost:3000")!
         #else
-        return URL(string: "https://snap-backend.onrender.com")!
+        return Self.defaultProductionURL
         #endif
     }
 
