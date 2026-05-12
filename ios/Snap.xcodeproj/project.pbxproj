@@ -17,6 +17,7 @@
 		5E20E5EA353D9F9E4CBB9685 /* MissionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58AAE788D509FE55A60F5A17 /* MissionDetailView.swift */; };
 		6CB75008D9D3066245DA2C21 /* CameraCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF29EE86719027707E59CB30 /* CameraCaptureView.swift */; };
 		73AF2CAB2F1A458F05F6E40B /* GameDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7FF92B9FC212A90B21CAE0F /* GameDetailView.swift */; };
+		962CB98E3C61D2A0A5ACDA9C /* ReviewQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331D48EB5A745EE99A2F80DD /* ReviewQueueView.swift */; };
 		A344FD751D29CC05B28629E2 /* TeamsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6595CAD9532612D3172AE69E /* TeamsView.swift */; };
 		A8D693D51BE1F6A314F349F3 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBE12FEF6F5B9C94D13F8FC /* AppState.swift */; };
 		A9F2420B5269651767DEE211 /* GameAdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E904D105CA4E4B12B79AEE9C /* GameAdminView.swift */; };
@@ -34,6 +35,7 @@
 		2806ED78A9268DEB55CEF709 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2BBE12FEF6F5B9C94D13F8FC /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		2FD6FD726B1493B014F6ABB1 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		331D48EB5A745EE99A2F80DD /* ReviewQueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewQueueView.swift; sourceTree = "<group>"; };
 		368668341407BDCE54517086 /* NewGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGameView.swift; sourceTree = "<group>"; };
 		3BC5BC322A05E4F0343BA8C9 /* Snap.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Snap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4506329C6000E69CDAA97BEA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 				368668341407BDCE54517086 /* NewGameView.swift */,
 				CBEEA506F80BAD6BAB9669D2 /* QRCodeView.swift */,
 				F09609F83A4F38CC1B6CFB29 /* QRScannerView.swift */,
+				331D48EB5A745EE99A2F80DD /* ReviewQueueView.swift */,
 			);
 			path = Host;
 			sourceTree = "<group>";
@@ -271,6 +274,7 @@
 				E7760D9BB83CF2A8A02D0EBA /* NewGameView.swift in Sources */,
 				ADE3437F05BFD98B1D3DD808 /* QRCodeView.swift in Sources */,
 				586FAE9FE624F02CACC4C3B5 /* QRScannerView.swift in Sources */,
+				962CB98E3C61D2A0A5ACDA9C /* ReviewQueueView.swift in Sources */,
 				B67B42615610BE830F8E46B1 /* SnapApp.swift in Sources */,
 				A344FD751D29CC05B28629E2 /* TeamsView.swift in Sources */,
 			);

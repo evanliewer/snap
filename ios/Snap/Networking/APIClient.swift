@@ -173,6 +173,31 @@ final class APIClient {
 
     // MARK: Submissions
 
+    func submissions(gameId: Int, status: String? = nil) async throws -> SubmissionsResponse {
+        var path = "/api/v1/games/\(gameId)/submissions"
+        if let status, !status.isEmpty {
+            path += "?status=\(status)"
+        }
+        return try await get(path)
+    }
+
+    func reviewSubmission(id: Int, status: String, pointsAwarded: Int? = nil, reviewNotes: String? = nil) async throws -> APISubmission {
+        struct Body: Encodable {
+            struct Sub: Encodable {
+                let status: String
+                let pointsAwarded: Int?
+                let reviewNotes: String?
+            }
+            let submission: Sub
+        }
+        let body = Body(submission: .init(status: status, pointsAwarded: pointsAwarded, reviewNotes: reviewNotes))
+        return try await patch("/api/v1/submissions/\(id)", body: body)
+    }
+
+    func deleteSubmission(id: Int) async throws {
+        _ = try await request("/api/v1/submissions/\(id)", method: "DELETE", body: nil as String?)
+    }
+
     func submitPhoto(missionId: Int, image: UIImage, caption: String?, latitude: Double?, longitude: Double?) async throws -> APISubmission {
         let boundary = "Boundary-\(UUID().uuidString)"
         var request = try buildRequest(path: "/api/v1/missions/\(missionId)/submissions", method: "POST", authed: true)

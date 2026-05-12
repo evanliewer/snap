@@ -23,11 +23,15 @@ Rails.application.routes.draw do
         end
         resources :mission_categories, only: %i[index create update destroy], path: "categories"
         resources :missions, only: %i[index create update destroy]
+        get "submissions", to: "submissions#index_for_game"
       end
 
       resources :missions, only: [] do
-        resources :submissions, only: %i[index create]
+        get  "submissions", to: "submissions#index_for_mission"
+        post "submissions", to: "submissions#create"
       end
+
+      resources :submissions, only: %i[update destroy]
     end
   end
 

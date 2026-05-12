@@ -6,7 +6,7 @@ struct GameAdminView: View {
 
     let game: APIGame
     @State private var section: Section = .teams
-    enum Section: String, CaseIterable { case teams = "Teams", categories = "Categories", missions = "Missions", settings = "Settings" }
+    enum Section: String, CaseIterable { case teams = "Teams", categories = "Categories", missions = "Missions", review = "Review", settings = "Settings" }
 
     var body: some View {
         NavigationStack {
@@ -21,6 +21,7 @@ struct GameAdminView: View {
                 case .teams:      TeamsAdminView(gameId: game.id)
                 case .categories: CategoriesAdminView(gameId: game.id)
                 case .missions:   MissionsAdminView(game: game)
+                case .review:     ReviewQueueView(game: game)
                 case .settings:   GameSettingsAdminView(game: game) { dismiss() }
                 }
             }

@@ -123,6 +123,10 @@ struct ActivityResponse: Codable {
     let events: [APISubmission]
 }
 
+struct SubmissionsResponse: Codable {
+    let submissions: [APISubmission]
+}
+
 struct CategoriesResponse: Codable {
     let categories: [MissionCategory]
 }
