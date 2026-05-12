@@ -87,4 +87,9 @@ Rails.application.configure do
     config.hosts << ENV["APP_HOST"]
   end
   config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
+  # ActionCable: iOS clients are not browsers and don't send Origin headers.
+  # Token auth via params handles authentication.
+  config.action_cable.disable_request_forgery_protection = true
+  config.action_cable.allowed_request_origins = [%r{https?://.*}, %r{snap://.*}]
 end

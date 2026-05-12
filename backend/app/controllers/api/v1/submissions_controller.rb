@@ -29,6 +29,7 @@ module Api
         end
 
         if submission.save
+          ActivityChannel.broadcast_submission(submission)
           render json: SubmissionSerializer.new(submission).as_json, status: :created
         else
           render_record_errors(submission)
@@ -68,6 +69,7 @@ module Api
           end
         end
         if @submission.update(attrs)
+          ActivityChannel.broadcast_submission_updated(@submission)
           render json: SubmissionSerializer.new(@submission).as_json
         else
           render_record_errors(@submission)

@@ -5,6 +5,8 @@ struct ActivityFeedView: View {
     @State private var events: [APISubmission] = []
     @State private var loading = true
     @State private var error: String?
+    @State private var liveConnected = false
+    @State private var cable: CableClient<ActivityChannelMessage>?
 
     var body: some View {
         Group {
@@ -14,6 +16,14 @@ struct ActivityFeedView: View {
                 ContentUnavailableView("Nothing yet", systemImage: "sparkles", description: Text("Submissions will appear here."))
             } else {
                 ScrollView {
+                    if liveConnected {
+                        Label("Live", systemImage: "dot.radiowaves.left.and.right")
+                            .font(.caption.bold())
+                            .padding(.horizontal, 10).padding(.vertical, 4)
+                            .background(.green.opacity(0.15), in: Capsule())
+                            .foregroundStyle(.green)
+                            .padding(.top, 4)
+                    }
                     LazyVStack(spacing: 16) {
                         ForEach(events) { event in
                             ActivityCard(event: event)
@@ -25,6 +35,8 @@ struct ActivityFeedView: View {
         }
         .task { await load() }
         .refreshable { await load() }
+        .onAppear { connectCable() }
+        .onDisappear { cable?.disconnect(); cable = nil; liveConnected = false }
     }
 
     private func load() async {
@@ -37,6 +49,39 @@ struct ActivityFeedView: View {
             self.error = error.userMessage
         }
         loading = false
+    }
+
+    private func connectCable() {
+        guard cable == nil, let token = APIClient.shared.token else { return }
+        let client = CableClient<ActivityChannelMessage>(
+            baseURL: APIClient.shared.baseURL,
+            token: token,
+            channel: "ActivityChannel",
+            params: ["game_id": gameId]
+        ) { msg in
+            handle(message: msg)
+        }
+        cable = client
+        client.connect()
+        liveConnected = true
+    }
+
+    private func handle(message: ActivityChannelMessage) {
+        switch message.type {
+        case "submission.created":
+            // Prepend if not already there
+            if !events.contains(where: { $0.id == message.submission.id }) {
+                events.insert(message.submission, at: 0)
+            }
+        case "submission.updated":
+            if let idx = events.firstIndex(where: { $0.id == message.submission.id }) {
+                events[idx] = message.submission
+            } else {
+                events.insert(message.submission, at: 0)
+            }
+        default:
+            break
+        }
     }
 }
 

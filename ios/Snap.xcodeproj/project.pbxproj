@@ -15,6 +15,7 @@
 		4F768FA86F12C5A22524C47B /* JoinGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B24026C08DD8050AA63155 /* JoinGameView.swift */; };
 		586FAE9FE624F02CACC4C3B5 /* QRScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F09609F83A4F38CC1B6CFB29 /* QRScannerView.swift */; };
 		5E20E5EA353D9F9E4CBB9685 /* MissionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58AAE788D509FE55A60F5A17 /* MissionDetailView.swift */; };
+		65998848A10A252CCF56725A /* CableClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC7842432252409CAC06B6E /* CableClient.swift */; };
 		6CB75008D9D3066245DA2C21 /* CameraCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF29EE86719027707E59CB30 /* CameraCaptureView.swift */; };
 		73AF2CAB2F1A458F05F6E40B /* GameDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7FF92B9FC212A90B21CAE0F /* GameDetailView.swift */; };
 		962CB98E3C61D2A0A5ACDA9C /* ReviewQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331D48EB5A745EE99A2F80DD /* ReviewQueueView.swift */; };
@@ -42,6 +43,7 @@
 		56308B54E47EFF3D7DF28A33 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		58AAE788D509FE55A60F5A17 /* MissionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetailView.swift; sourceTree = "<group>"; };
 		6595CAD9532612D3172AE69E /* TeamsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamsView.swift; sourceTree = "<group>"; };
+		6EC7842432252409CAC06B6E /* CableClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CableClient.swift; sourceTree = "<group>"; };
 		77B129C6F8DCE01DD9A90C3E /* LeaderboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardView.swift; sourceTree = "<group>"; };
 		78B24026C08DD8050AA63155 /* JoinGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinGameView.swift; sourceTree = "<group>"; };
 		7C16F1F31F1438159801DCE4 /* ActivityFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityFeedView.swift; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				1511036F64D4FEAE183B5431 /* APIClient.swift */,
+				6EC7842432252409CAC06B6E /* CableClient.swift */,
 				2FD6FD726B1493B014F6ABB1 /* Models.swift */,
 			);
 			path = Networking;
@@ -261,6 +264,7 @@
 				EC4662E72FC2FF3529446580 /* ActivityFeedView.swift in Sources */,
 				A8D693D51BE1F6A314F349F3 /* AppState.swift in Sources */,
 				073DB7EBA053EF512517686E /* AuthGateView.swift in Sources */,
+				65998848A10A252CCF56725A /* CableClient.swift in Sources */,
 				6CB75008D9D3066245DA2C21 /* CameraCaptureView.swift in Sources */,
 				A9F2420B5269651767DEE211 /* GameAdminView.swift in Sources */,
 				73AF2CAB2F1A458F05F6E40B /* GameDetailView.swift in Sources */,
