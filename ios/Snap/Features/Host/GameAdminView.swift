@@ -309,6 +309,7 @@ struct MissionsAdminView: View {
     @State private var error: String?
     @State private var editing: APIMission?
     @State private var creating = false
+    @State private var pickingTemplate = false
     @State private var editMode: EditMode = .inactive
 
     var body: some View {
@@ -316,7 +317,15 @@ struct MissionsAdminView: View {
             if loading {
                 ProgressView()
             } else if missions.isEmpty {
-                ContentUnavailableView("No missions yet", systemImage: "list.bullet", description: Text("Missions are the prompts players photograph."))
+                VStack(spacing: 12) {
+                    ContentUnavailableView("No missions yet", systemImage: "list.bullet", description: Text("Missions are the prompts players photograph."))
+                    Button { pickingTemplate = true } label: {
+                        Label("Start from a template", systemImage: "wand.and.stars")
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+                .frame(maxWidth: .infinity)
+                .listRowBackground(Color.clear)
             } else {
                 ForEach(missions) { m in
                     Button { editing = m } label: {
@@ -356,7 +365,10 @@ struct MissionsAdminView: View {
                             editMode = (editMode == .active) ? .inactive : .active
                         }
                     }
-                    Button { creating = true } label: { Image(systemName: "plus") }
+                    Menu {
+                        Button { creating = true } label: { Label("New mission", systemImage: "plus") }
+                        Button { pickingTemplate = true } label: { Label("Add from template", systemImage: "wand.and.stars") }
+                    } label: { Image(systemName: "plus") }
                 }
             }
         }
@@ -364,6 +376,9 @@ struct MissionsAdminView: View {
         .refreshable { await load() }
         .sheet(isPresented: $creating, onDismiss: { Task { await load() } }) {
             MissionEditorView(gameId: game.id, mission: nil, categories: categories, defaultPosition: missions.count)
+        }
+        .sheet(isPresented: $pickingTemplate, onDismiss: { Task { await load() } }) {
+            TemplatesPickerView(gameId: game.id)
         }
         .sheet(item: $editing, onDismiss: { Task { await load() } }) { m in
             MissionEditorView(gameId: game.id, mission: m, categories: categories, defaultPosition: m.position)
@@ -431,7 +446,18 @@ struct MissionEditorView: View {
                 }
                 Section("Scoring") {
                     Stepper("Points: \(input.points)", value: $input.points, in: 0...10000, step: 25)
-                    Stepper("Bonus: \(input.bonusPoints)", value: $input.bonusPoints, in: 0...10000, step: 25)
+                    Stepper("Manual bonus: \(input.bonusPoints)", value: $input.bonusPoints, in: 0...10000, step: 25)
+                    Stepper("First teams to award: \(input.firstBonusCount)", value: $input.firstBonusCount, in: 0...20)
+                    Stepper("Bonus for first teams: \(input.firstBonusPoints)", value: $input.firstBonusPoints, in: 0...10000, step: 25)
+                }
+                Section("Availability window (optional)") {
+                    OptionalDateRow(title: "Available from", date: $input.availableFrom)
+                    OptionalDateRow(title: "Available until", date: $input.availableUntil)
+                }
+                Section(header: Text("Hot-spot (optional)"), footer: Text("Submissions must be made within the radius of this location.")) {
+                    OptionalDoubleRow(title: "Latitude",  value: $input.hotspotLatitude)
+                    OptionalDoubleRow(title: "Longitude", value: $input.hotspotLongitude)
+                    OptionalIntRow(title: "Radius (m)", value: $input.hotspotRadiusM)
                 }
                 Section("Type & category") {
                     Picker("Type", selection: $input.missionType) {
@@ -694,6 +720,67 @@ struct GameSettingsAdminView: View {
             await appState.refreshGames()
             onDeleted()
         } catch { self.error = error.userMessage }
+    }
+}
+
+// MARK: - Shared form helpers
+
+struct OptionalDateRow: View {
+    let title: String
+    @Binding var date: Date?
+    @State private var working: Date = Date()
+    var body: some View {
+        Toggle(title, isOn: Binding(
+            get: { date != nil },
+            set: { isOn in date = isOn ? working : nil }
+        ))
+        if date != nil {
+            DatePicker(title, selection: Binding(
+                get: { date ?? working },
+                set: { date = $0; working = $0 }
+            ))
+            .labelsHidden()
+        }
+    }
+}
+
+struct OptionalDoubleRow: View {
+    let title: String
+    @Binding var value: Double?
+    @State private var text: String = ""
+
+    var body: some View {
+        HStack {
+            Text(title)
+            Spacer()
+            TextField("—", text: $text)
+                .keyboardType(.decimalPad)
+                .multilineTextAlignment(.trailing)
+                .frame(maxWidth: 140)
+                .onChange(of: text) { _, new in
+                    value = Double(new)
+                }
+        }
+        .onAppear { text = value.map { String($0) } ?? "" }
+    }
+}
+
+struct OptionalIntRow: View {
+    let title: String
+    @Binding var value: Int?
+    @State private var text: String = ""
+
+    var body: some View {
+        HStack {
+            Text(title)
+            Spacer()
+            TextField("—", text: $text)
+                .keyboardType(.numberPad)
+                .multilineTextAlignment(.trailing)
+                .frame(maxWidth: 140)
+                .onChange(of: text) { _, new in value = Int(new) }
+        }
+        .onAppear { text = value.map { String($0) } ?? "" }
     }
 }
 

@@ -21,9 +21,12 @@ class Submission < ApplicationRecord
     reactions.where(user_id: user.id).pluck(:kind)
   end
 
+  # points_awarded is signed — judges can hand out penalties.
   validates :status, inclusion: { in: STATUSES }
   validate :enforce_team_quota, on: :create
   validate :require_media_for_mission_type
+  validate :enforce_time_window, on: :create
+  validate :enforce_hotspot, on: :create
 
   before_validation :default_status_and_points, on: :create
 
@@ -39,7 +42,11 @@ class Submission < ApplicationRecord
   def default_status_and_points
     return if mission.nil?
     self.status ||= mission.game.auto_approve? ? "approved" : "pending"
-    self.points_awarded = mission.points if points_awarded.to_i.zero? && status == "approved"
+    if points_awarded.to_i.zero? && status == "approved"
+      base = mission.points
+      bonus = mission.first_bonus_eligible?(for_team: team) ? mission.first_bonus_points.to_i : 0
+      self.points_awarded = base + bonus
+    end
   end
 
   def enforce_team_quota
@@ -57,6 +64,29 @@ class Submission < ApplicationRecord
       errors.add(:photo, "is required") unless photo.attached?
     when "video"
       errors.add(:video, "is required") unless video.attached? || photo.attached?
+    end
+  end
+
+  def enforce_time_window
+    return unless mission
+    now = Time.current
+    if mission.available_from && now < mission.available_from
+      errors.add(:base, "Mission isn't available yet")
+    end
+    if mission.available_until && now > mission.available_until
+      errors.add(:base, "Mission window has closed")
+    end
+  end
+
+  def enforce_hotspot
+    return unless mission && mission.hotspot_required?
+    if latitude.nil? || longitude.nil?
+      errors.add(:base, "Location is required for this hot-spot mission")
+      return
+    end
+    distance = mission.hotspot_distance_meters(lat: latitude, lng: longitude)
+    if distance.nil? || distance > mission.hotspot_radius_m.to_i
+      errors.add(:base, "You must be within #{mission.hotspot_radius_m}m of the hot-spot")
     end
   end
 end

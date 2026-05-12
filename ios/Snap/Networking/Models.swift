@@ -90,12 +90,20 @@ struct APIMission: Codable, Identifiable, Equatable {
     let description: String?
     let points: Int
     let bonusPoints: Int
+    let firstBonusCount: Int?
+    let firstBonusPoints: Int?
     let missionType: String
     let position: Int
     let required: Bool
     let repeatable: Bool
     let maxSubmissionsPerTeam: Int
     let requiresLocation: Bool
+    let availableFrom: Date?
+    let availableUntil: Date?
+    let hotspotLatitude: Double?
+    let hotspotLongitude: Double?
+    let hotspotRadiusM: Int?
+    let availableNow: Bool?
     let completedByTeam: Bool
     let teamSubmissionCount: Int
 }
@@ -219,6 +227,8 @@ struct MissionInput: Encodable {
     var description: String?
     var points: Int
     var bonusPoints: Int
+    var firstBonusCount: Int
+    var firstBonusPoints: Int
     var missionType: String
     var position: Int?
     var required: Bool
@@ -226,20 +236,51 @@ struct MissionInput: Encodable {
     var maxSubmissionsPerTeam: Int
     var requiresLocation: Bool
     var missionCategoryId: Int?
+    var availableFrom: Date?
+    var availableUntil: Date?
+    var hotspotLatitude: Double?
+    var hotspotLongitude: Double?
+    var hotspotRadiusM: Int?
 
     static func empty(position: Int = 0) -> MissionInput {
         MissionInput(title: "", description: nil, points: 100, bonusPoints: 0,
+                     firstBonusCount: 0, firstBonusPoints: 0,
                      missionType: "photo", position: position, required: false,
                      repeatable: false, maxSubmissionsPerTeam: 1, requiresLocation: false,
-                     missionCategoryId: nil)
+                     missionCategoryId: nil,
+                     availableFrom: nil, availableUntil: nil,
+                     hotspotLatitude: nil, hotspotLongitude: nil, hotspotRadiusM: nil)
     }
     static func from(_ m: APIMission) -> MissionInput {
         MissionInput(
             title: m.title, description: m.description, points: m.points,
-            bonusPoints: m.bonusPoints, missionType: m.missionType, position: m.position,
+            bonusPoints: m.bonusPoints,
+            firstBonusCount: m.firstBonusCount ?? 0,
+            firstBonusPoints: m.firstBonusPoints ?? 0,
+            missionType: m.missionType, position: m.position,
             required: m.required, repeatable: m.repeatable,
             maxSubmissionsPerTeam: m.maxSubmissionsPerTeam,
-            requiresLocation: m.requiresLocation, missionCategoryId: m.categoryId
+            requiresLocation: m.requiresLocation, missionCategoryId: m.categoryId,
+            availableFrom: m.availableFrom, availableUntil: m.availableUntil,
+            hotspotLatitude: m.hotspotLatitude, hotspotLongitude: m.hotspotLongitude,
+            hotspotRadiusM: m.hotspotRadiusM
         )
     }
+}
+
+struct GameTemplateSummary: Codable, Identifiable {
+    var id: String { slug }
+    let slug: String
+    let title: String
+    let description: String
+    let categoryCount: Int
+    let missionCount: Int
+    let categories: [TemplateCategory]
+    let missions: [TemplateMission]
+    struct TemplateCategory: Codable, Hashable { let name: String; let color: String? }
+    struct TemplateMission: Codable, Hashable { let title: String; let points: Int; let category: String? }
+}
+
+struct GameTemplatesResponse: Codable {
+    let templates: [GameTemplateSummary]
 }

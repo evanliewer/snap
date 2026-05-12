@@ -59,7 +59,10 @@ module Api
       def mission_params
         params.require(:mission).permit(
           :title, :description, :points, :bonus_points, :mission_type, :position,
-          :required, :repeatable, :max_submissions_per_team, :requires_location, :mission_category_id
+          :required, :repeatable, :max_submissions_per_team, :requires_location, :mission_category_id,
+          :available_from, :available_until,
+          :hotspot_latitude, :hotspot_longitude, :hotspot_radius_m,
+          :first_bonus_count, :first_bonus_points
         )
       end
 

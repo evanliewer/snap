@@ -158,9 +158,14 @@ struct MissionDetailView: View {
                 id: mission.id, gameId: mission.gameId, categoryId: mission.categoryId,
                 categoryName: mission.categoryName, categoryColor: mission.categoryColor,
                 title: mission.title, description: mission.description, points: mission.points,
-                bonusPoints: mission.bonusPoints, missionType: mission.missionType,
+                bonusPoints: mission.bonusPoints,
+                firstBonusCount: mission.firstBonusCount, firstBonusPoints: mission.firstBonusPoints,
+                missionType: mission.missionType,
                 position: mission.position, required: mission.required, repeatable: mission.repeatable,
                 maxSubmissionsPerTeam: mission.maxSubmissionsPerTeam, requiresLocation: mission.requiresLocation,
+                availableFrom: mission.availableFrom, availableUntil: mission.availableUntil,
+                hotspotLatitude: mission.hotspotLatitude, hotspotLongitude: mission.hotspotLongitude,
+                hotspotRadiusM: mission.hotspotRadiusM, availableNow: mission.availableNow,
                 completedByTeam: true, teamSubmissionCount: mission.teamSubmissionCount + 1
             )
             onSubmitted(updated)

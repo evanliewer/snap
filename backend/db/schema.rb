@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_12_212703) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_12_225308) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -95,10 +95,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_12_212703) do
   end
 
   create_table "missions", force: :cascade do |t|
+    t.datetime "available_from"
+    t.datetime "available_until"
     t.integer "bonus_points", default: 0, null: false
     t.datetime "created_at", null: false
     t.text "description"
+    t.integer "first_bonus_count", default: 0, null: false
+    t.integer "first_bonus_points", default: 0, null: false
     t.bigint "game_id", null: false
+    t.decimal "hotspot_latitude", precision: 10, scale: 6
+    t.decimal "hotspot_longitude", precision: 10, scale: 6
+    t.integer "hotspot_radius_m"
     t.integer "max_submissions_per_team", default: 1, null: false
     t.bigint "mission_category_id"
     t.string "mission_type", default: "photo", null: false

@@ -134,6 +134,16 @@ final class APIClient {
         _ = try await request("/api/v1/games/\(gameId)/categories/reorder", method: "POST", body: ["ids": ids])
     }
 
+    // MARK: Templates
+
+    func gameTemplates() async throws -> GameTemplatesResponse {
+        try await get("/api/v1/game_templates")
+    }
+
+    func applyTemplate(gameId: Int, slug: String) async throws -> APIGame {
+        try await post("/api/v1/games/\(gameId)/apply_template", body: ["slug": slug])
+    }
+
     func leaderboard(gameId: Int) async throws -> LeaderboardResponse {
         try await get("/api/v1/games/\(gameId)/leaderboard")
     }

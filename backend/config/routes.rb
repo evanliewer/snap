@@ -45,6 +45,9 @@ Rails.application.routes.draw do
       end
       resources :comments, only: %i[destroy]
       get "games/:game_id/players/:id", to: "players#show", as: :game_player
+
+      get  "game_templates", to: "game_templates#index"
+      post "games/:game_id/apply_template", to: "game_templates#apply"
     end
   end
 
