@@ -1,4 +1,5 @@
 import SwiftUI
+import PhotosUI
 
 struct GameAdminView: View {
     @EnvironmentObject var appState: AppState
@@ -166,6 +167,7 @@ struct CategoriesAdminView: View {
     @State private var error: String?
     @State private var editing: MissionCategory?
     @State private var creating = false
+    @State private var editMode: EditMode = .inactive
 
     var body: some View {
         List {
@@ -190,12 +192,24 @@ struct CategoriesAdminView: View {
                         } label: { Label("Delete", systemImage: "trash") }
                     }
                 }
+                .onMove { from, to in
+                    categories.move(fromOffsets: from, toOffset: to)
+                    Task { await persistOrder() }
+                }
             }
             if let error { Text(error).foregroundStyle(.red).font(.footnote) }
         }
+        .environment(\.editMode, $editMode)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button { creating = true } label: { Image(systemName: "plus") }
+                HStack {
+                    if !categories.isEmpty {
+                        Button(editMode == .active ? "Done" : "Reorder") {
+                            editMode = (editMode == .active) ? .inactive : .active
+                        }
+                    }
+                    Button { creating = true } label: { Image(systemName: "plus") }
+                }
             }
         }
         .task { await load() }
@@ -219,6 +233,11 @@ struct CategoriesAdminView: View {
 
     private func delete(_ c: MissionCategory) async {
         do { try await APIClient.shared.deleteCategory(gameId: gameId, categoryId: c.id); await load() }
+        catch { self.error = error.userMessage }
+    }
+
+    private func persistOrder() async {
+        do { try await APIClient.shared.reorderCategories(gameId: gameId, ids: categories.map(\.id)) }
         catch { self.error = error.userMessage }
     }
 }
@@ -290,6 +309,7 @@ struct MissionsAdminView: View {
     @State private var error: String?
     @State private var editing: APIMission?
     @State private var creating = false
+    @State private var editMode: EditMode = .inactive
 
     var body: some View {
         List {
@@ -320,12 +340,24 @@ struct MissionsAdminView: View {
                         } label: { Label("Delete", systemImage: "trash") }
                     }
                 }
+                .onMove { from, to in
+                    missions.move(fromOffsets: from, toOffset: to)
+                    Task { await persistOrder() }
+                }
             }
             if let error { Text(error).foregroundStyle(.red).font(.footnote) }
         }
+        .environment(\.editMode, $editMode)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button { creating = true } label: { Image(systemName: "plus") }
+                HStack {
+                    if !missions.isEmpty {
+                        Button(editMode == .active ? "Done" : "Reorder") {
+                            editMode = (editMode == .active) ? .inactive : .active
+                        }
+                    }
+                    Button { creating = true } label: { Image(systemName: "plus") }
+                }
             }
         }
         .task { await load() }
@@ -351,6 +383,11 @@ struct MissionsAdminView: View {
 
     private func delete(_ m: APIMission) async {
         do { try await APIClient.shared.deleteMission(gameId: game.id, missionId: m.id); await load() }
+        catch { self.error = error.userMessage }
+    }
+
+    private func persistOrder() async {
+        do { try await APIClient.shared.reorderMissions(gameId: game.id, ids: missions.map(\.id)) }
         catch { self.error = error.userMessage }
     }
 
@@ -465,11 +502,16 @@ struct GameSettingsAdminView: View {
     @State private var error: String?
     @State private var statusBusy = false
     @State private var deleting = false
+    @State private var duplicating = false
+    @State private var pickerItem: PhotosPickerItem?
+    @State private var coverUploading = false
+    @State private var coverURL: String?
 
     init(game: APIGame, onDeleted: @escaping () -> Void) {
         self.game = game
         self.onDeleted = onDeleted
         _input = State(initialValue: GameInput.from(game))
+        _coverURL = State(initialValue: game.coverUrl)
     }
 
     var body: some View {
@@ -521,6 +563,38 @@ struct GameSettingsAdminView: View {
                 TextField("Description", text: Binding(get: { input.description ?? "" }, set: { input.description = $0.isEmpty ? nil : $0 }), axis: .vertical)
                     .lineLimit(2...5)
             }
+            Section("Cover image") {
+                HStack(spacing: 12) {
+                    if let url = coverURL, let imageURL = URL(string: url) {
+                        AsyncImage(url: imageURL) { phase in
+                            switch phase {
+                            case .success(let img): img.resizable().scaledToFill()
+                            default: Color.secondary.opacity(0.15).overlay(Image(systemName: "photo"))
+                            }
+                        }
+                        .frame(width: 80, height: 80)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    } else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color.secondary.opacity(0.15))
+                            .frame(width: 80, height: 80)
+                            .overlay(Image(systemName: "photo").foregroundStyle(.secondary))
+                    }
+                    VStack(alignment: .leading) {
+                        PhotosPicker(selection: $pickerItem, matching: .images) {
+                            HStack {
+                                if coverUploading { ProgressView() }
+                                Label(coverURL == nil ? "Pick image" : "Change image", systemImage: "photo.badge.plus")
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .disabled(coverUploading)
+                        Text("Shown on the game header.")
+                            .font(.caption2).foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                }
+            }
             Section("Settings") {
                 Toggle("Allow video submissions", isOn: $input.allowVideo)
                 Toggle("Show leaderboard", isOn: $input.showLeaderboard)
@@ -535,6 +609,17 @@ struct GameSettingsAdminView: View {
                 .disabled(input.title.isEmpty || saving)
                 .buttonStyle(.borderedProminent)
             }
+            Section("Actions") {
+                Button {
+                    Task { await duplicate() }
+                } label: {
+                    HStack {
+                        if duplicating { ProgressView() }
+                        Label("Duplicate to a new draft", systemImage: "square.on.square")
+                    }
+                }
+                .disabled(duplicating)
+            }
             Section("Danger zone") {
                 Button(role: .destructive) {
                     Task { await deleteGame() }
@@ -544,6 +629,33 @@ struct GameSettingsAdminView: View {
             }
             if let error { Text(error).foregroundStyle(.red).font(.footnote) }
         }
+        .onChange(of: pickerItem) { _, newItem in
+            Task { await uploadCover(newItem) }
+        }
+    }
+
+    private func uploadCover(_ item: PhotosPickerItem?) async {
+        guard let item else { return }
+        coverUploading = true
+        defer { coverUploading = false }
+        error = nil
+        do {
+            guard let data = try await item.loadTransferable(type: Data.self),
+                  let image = UIImage(data: data) else { return }
+            let updated = try await APIClient.shared.uploadGameCover(id: game.id, image: image)
+            coverURL = updated.coverUrl
+            await appState.refreshGames()
+        } catch { self.error = error.userMessage }
+    }
+
+    private func duplicate() async {
+        duplicating = true
+        defer { duplicating = false }
+        error = nil
+        do {
+            _ = try await APIClient.shared.duplicateGame(id: game.id)
+            await appState.refreshGames()
+        } catch { self.error = error.userMessage }
     }
 
     enum StatusAction { case start, end }

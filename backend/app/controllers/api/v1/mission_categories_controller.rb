@@ -36,6 +36,18 @@ module Api
         head :no_content
       end
 
+      # POST /api/v1/games/:game_id/categories/reorder  body: { ids: [3, 1, 2] }
+      def reorder
+        return require_admin unless @game.admin?(current_user)
+        ids = Array(params[:ids]).map(&:to_i)
+        MissionCategory.transaction do
+          ids.each_with_index do |id, idx|
+            @game.mission_categories.where(id: id).update_all(position: idx)
+          end
+        end
+        head :no_content
+      end
+
       private
 
       def category_params

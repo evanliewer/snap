@@ -1,8 +1,8 @@
 module Api
   module V1
     class GamesController < BaseController
-      before_action :load_game, only: %i[show update destroy leaderboard activity start end]
-      before_action :require_admin, only: %i[update destroy start end]
+      before_action :load_game, only: %i[show update destroy leaderboard activity start end duplicate cover]
+      before_action :require_admin, only: %i[update destroy start end duplicate cover]
 
       # POST /api/v1/games
       def create
@@ -58,6 +58,62 @@ module Api
       def end
         @game.update!(status: "ended", ends_at: Time.current)
         render json: GameSerializer.new(@game, viewer: current_user, detail: true).as_json
+      end
+
+      # POST /api/v1/games/:id/duplicate
+      def duplicate
+        new_game = nil
+        ActiveRecord::Base.transaction do
+          new_game = current_user.owned_games.create!(
+            title: "#{@game.title} (copy)",
+            description: @game.description,
+            allow_video: @game.allow_video,
+            show_leaderboard: @game.show_leaderboard,
+            auto_approve: @game.auto_approve,
+            status: "draft"
+          )
+          current_user.memberships.create!(game: new_game, role: "admin")
+
+          category_map = {}
+          @game.mission_categories.each do |c|
+            new_c = new_game.mission_categories.create!(name: c.name, color: c.color, position: c.position)
+            category_map[c.id] = new_c.id
+          end
+
+          @game.missions.each do |m|
+            new_game.missions.create!(
+              mission_category_id: category_map[m.mission_category_id],
+              title: m.title,
+              description: m.description,
+              points: m.points,
+              bonus_points: m.bonus_points,
+              mission_type: m.mission_type,
+              position: m.position,
+              required: m.required,
+              repeatable: m.repeatable,
+              max_submissions_per_team: m.max_submissions_per_team,
+              requires_location: m.requires_location
+            )
+          end
+          # Teams: copy the names + colors but not members
+          @game.teams.each do |t|
+            new_game.teams.create!(name: t.name, color: t.color)
+          end
+        end
+        render json: GameSerializer.new(new_game, viewer: current_user, detail: true).as_json, status: :created
+      end
+
+      # PATCH /api/v1/games/:id/cover  (multipart: cover_image)
+      def cover
+        if params[:cover_image].present?
+          @game.cover_image.attach(params[:cover_image])
+          render json: GameSerializer.new(@game, viewer: current_user, detail: true).as_json
+        elsif params[:remove] == "1"
+          @game.cover_image.purge
+          render json: GameSerializer.new(@game, viewer: current_user, detail: true).as_json
+        else
+          render json: { error: "cover_image file required" }, status: :unprocessable_entity
+        end
       end
 
       # GET /api/v1/games/:id/leaderboard

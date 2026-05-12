@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
+  mount ActionCable.server => "/cable"
+
   # --- iOS / JSON API ---
   namespace :api do
     namespace :v1 do
@@ -17,12 +19,18 @@ Rails.application.routes.draw do
           get :activity
           post :start
           post :end
+          post :duplicate
+          patch :cover
         end
         resources :teams, only: %i[index create update destroy] do
           post :join, on: :member
         end
-        resources :mission_categories, only: %i[index create update destroy], path: "categories"
-        resources :missions, only: %i[index create update destroy]
+        resources :mission_categories, only: %i[index create update destroy], path: "categories" do
+          collection { post :reorder }
+        end
+        resources :missions, only: %i[index create update destroy] do
+          collection { post :reorder }
+        end
         get "submissions", to: "submissions#index_for_game"
       end
 

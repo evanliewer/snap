@@ -105,6 +105,35 @@ final class APIClient {
         try await post("/api/v1/games/\(id)/end", body: [String: String]())
     }
 
+    func duplicateGame(id: Int) async throws -> APIGame {
+        try await post("/api/v1/games/\(id)/duplicate", body: [String: String]())
+    }
+
+    func uploadGameCover(id: Int, image: UIImage) async throws -> APIGame {
+        let boundary = "Boundary-\(UUID().uuidString)"
+        var request = try buildRequest(path: "/api/v1/games/\(id)/cover", method: "PATCH", authed: true)
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        var body = Data()
+        if let jpeg = image.jpegData(compressionQuality: 0.85) {
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"cover_image\"; filename=\"cover.jpg\"\r\n".data(using: .utf8)!)
+            body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+            body.append(jpeg)
+            body.append("\r\n".data(using: .utf8)!)
+        }
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+        let (data, response) = try await session.upload(for: request, from: body)
+        return try decode(data: data, response: response)
+    }
+
+    func reorderMissions(gameId: Int, ids: [Int]) async throws {
+        _ = try await request("/api/v1/games/\(gameId)/missions/reorder", method: "POST", body: ["ids": ids])
+    }
+
+    func reorderCategories(gameId: Int, ids: [Int]) async throws {
+        _ = try await request("/api/v1/games/\(gameId)/categories/reorder", method: "POST", body: ["ids": ids])
+    }
+
     func leaderboard(gameId: Int) async throws -> LeaderboardResponse {
         try await get("/api/v1/games/\(gameId)/leaderboard")
     }
