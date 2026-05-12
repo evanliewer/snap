@@ -9,6 +9,7 @@ final class AppState: ObservableObject {
     @Published var currentUser: APIUser?
     @Published var joinedGames: [APIGame] = []
     @Published var errorMessage: String?
+    @Published var pendingJoinCode: String?
 
     let api: APIClient
 

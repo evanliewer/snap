@@ -13,12 +13,14 @@
 		45EA4ABA09FE6E1E5421EF4D /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1511036F64D4FEAE183B5431 /* APIClient.swift */; };
 		4F57C51026A96EFFA9D5CFBB /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56308B54E47EFF3D7DF28A33 /* MainTabView.swift */; };
 		4F768FA86F12C5A22524C47B /* JoinGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B24026C08DD8050AA63155 /* JoinGameView.swift */; };
+		586FAE9FE624F02CACC4C3B5 /* QRScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F09609F83A4F38CC1B6CFB29 /* QRScannerView.swift */; };
 		5E20E5EA353D9F9E4CBB9685 /* MissionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58AAE788D509FE55A60F5A17 /* MissionDetailView.swift */; };
 		6CB75008D9D3066245DA2C21 /* CameraCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF29EE86719027707E59CB30 /* CameraCaptureView.swift */; };
 		73AF2CAB2F1A458F05F6E40B /* GameDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7FF92B9FC212A90B21CAE0F /* GameDetailView.swift */; };
 		A344FD751D29CC05B28629E2 /* TeamsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6595CAD9532612D3172AE69E /* TeamsView.swift */; };
 		A8D693D51BE1F6A314F349F3 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBE12FEF6F5B9C94D13F8FC /* AppState.swift */; };
 		A9F2420B5269651767DEE211 /* GameAdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E904D105CA4E4B12B79AEE9C /* GameAdminView.swift */; };
+		ADE3437F05BFD98B1D3DD808 /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEEA506F80BAD6BAB9669D2 /* QRCodeView.swift */; };
 		B67B42615610BE830F8E46B1 /* SnapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A658863EA1446B831A1BF9DF /* SnapApp.swift */; };
 		B7ECCE12B9539D94A4DD5955 /* MissionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DE91902B2FF80E3349A130 /* MissionsListView.swift */; };
 		C840A4009F19E0EC3590EEB6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4506329C6000E69CDAA97BEA /* Assets.xcassets */; };
@@ -45,8 +47,10 @@
 		A455994D6EB01959622ED798 /* GamesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesListView.swift; sourceTree = "<group>"; };
 		A658863EA1446B831A1BF9DF /* SnapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapApp.swift; sourceTree = "<group>"; };
 		CB35DDDB827EEA0DE57E6417 /* AuthGateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthGateView.swift; sourceTree = "<group>"; };
+		CBEEA506F80BAD6BAB9669D2 /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
 		D7FF92B9FC212A90B21CAE0F /* GameDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDetailView.swift; sourceTree = "<group>"; };
 		E904D105CA4E4B12B79AEE9C /* GameAdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameAdminView.swift; sourceTree = "<group>"; };
+		F09609F83A4F38CC1B6CFB29 /* QRScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerView.swift; sourceTree = "<group>"; };
 		FF29EE86719027707E59CB30 /* CameraCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCaptureView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -151,6 +155,8 @@
 			children = (
 				E904D105CA4E4B12B79AEE9C /* GameAdminView.swift */,
 				368668341407BDCE54517086 /* NewGameView.swift */,
+				CBEEA506F80BAD6BAB9669D2 /* QRCodeView.swift */,
+				F09609F83A4F38CC1B6CFB29 /* QRScannerView.swift */,
 			);
 			path = Host;
 			sourceTree = "<group>";
@@ -263,6 +269,8 @@
 				B7ECCE12B9539D94A4DD5955 /* MissionsListView.swift in Sources */,
 				CAEB8236526A1B18C190E728 /* Models.swift in Sources */,
 				E7760D9BB83CF2A8A02D0EBA /* NewGameView.swift in Sources */,
+				ADE3437F05BFD98B1D3DD808 /* QRCodeView.swift in Sources */,
+				586FAE9FE624F02CACC4C3B5 /* QRScannerView.swift in Sources */,
 				B67B42615610BE830F8E46B1 /* SnapApp.swift in Sources */,
 				A344FD751D29CC05B28629E2 /* TeamsView.swift in Sources */,
 			);

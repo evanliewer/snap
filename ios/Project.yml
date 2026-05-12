@@ -39,6 +39,10 @@ targets:
         NSLocationWhenInUseUsageDescription: Snap uses your location to tag mission submissions when required.
         NSAppTransportSecurity:
           NSAllowsArbitraryLoads: true
+        CFBundleURLTypes:
+          - CFBundleURLName: com.evanliewer.snap
+            CFBundleURLSchemes:
+              - snap
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.evanliewer.snap

@@ -56,6 +56,13 @@ struct GamesListView: View {
             }
             .sheet(isPresented: $showJoinSheet) { JoinGameView() }
             .sheet(isPresented: $showNewGameSheet) { NewGameView() }
+            .sheet(isPresented: Binding(
+                get: { appState.pendingJoinCode != nil },
+                set: { if !$0 { appState.pendingJoinCode = nil } }
+            )) {
+                JoinGameView(prefilledCode: appState.pendingJoinCode)
+                    .onDisappear { appState.pendingJoinCode = nil }
+            }
         }
     }
 }

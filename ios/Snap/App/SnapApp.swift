@@ -10,6 +10,11 @@ struct SnapApp: App {
                 .environmentObject(appState)
                 .task { await appState.bootstrap() }
                 .tint(.accentColor)
+                .onOpenURL { url in
+                    if let code = SnapDeepLink.code(from: url) {
+                        appState.pendingJoinCode = code
+                    }
+                }
         }
     }
 }

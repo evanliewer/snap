@@ -473,6 +473,21 @@ struct GameSettingsAdminView: View {
 
     var body: some View {
         Form {
+            Section("Invite players") {
+                VStack(spacing: 12) {
+                    QRCodeView(payload: SnapDeepLink.joinURL(code: game.joinCode).absoluteString)
+                    Text(game.joinCode)
+                        .font(.system(.title2, design: .monospaced).weight(.heavy))
+                        .foregroundStyle(Color.accentColor)
+                        .textSelection(.enabled)
+                    ShareLink(item: "Join my Snap game \"\(game.title)\" — code \(game.joinCode)\n\(SnapDeepLink.joinURL(code: game.joinCode).absoluteString)") {
+                        Label("Share invite", systemImage: "square.and.arrow.up")
+                    }
+                    .buttonStyle(.bordered)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 4)
+            }
             Section("Status") {
                 LabeledContent("Current") {
                     StatusPill(status: game.status)
