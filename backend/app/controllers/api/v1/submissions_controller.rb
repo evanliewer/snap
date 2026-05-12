@@ -30,6 +30,9 @@ module Api
         else
           render_record_errors(submission)
         end
+      rescue => e
+        Rails.logger.error("[SubmissionsController#create] #{e.class}: #{e.message}\n#{e.backtrace.first(15).join("\n")}")
+        render json: { error: e.class.name, message: e.message, backtrace: e.backtrace.first(8) }, status: :internal_server_error
       end
 
       # GET /api/v1/missions/:mission_id/submissions
