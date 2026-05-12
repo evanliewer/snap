@@ -2,6 +2,8 @@ module Api
   module V1
     class TeamsController < BaseController
       before_action :load_game
+      before_action :load_team, only: %i[update destroy join]
+      before_action :require_admin, only: %i[create update destroy]
 
       # GET /api/v1/games/:game_id/teams
       def index
@@ -9,9 +11,8 @@ module Api
         render json: { teams: teams.map { |t| team_payload(t) } }
       end
 
-      # POST /api/v1/games/:game_id/teams  (admin only)
+      # POST /api/v1/games/:game_id/teams
       def create
-        return forbid unless @game.admin?(current_user)
         team = @game.teams.new(team_params)
         if team.save
           render json: team_payload(team), status: :created
@@ -20,13 +21,27 @@ module Api
         end
       end
 
+      # PATCH /api/v1/games/:game_id/teams/:id
+      def update
+        if @team.update(team_params)
+          render json: team_payload(@team)
+        else
+          render_record_errors(@team)
+        end
+      end
+
+      # DELETE /api/v1/games/:game_id/teams/:id
+      def destroy
+        @team.destroy
+        head :no_content
+      end
+
       # POST /api/v1/games/:game_id/teams/:id/join
       def join
-        team = @game.teams.find(params[:id])
         membership = @game.memberships.find_by(user: current_user)
         return render json: { error: "Not a member" }, status: :forbidden unless membership
-        membership.update!(team: team)
-        render json: team_payload(team)
+        membership.update!(team: @team)
+        render json: team_payload(@team)
       end
 
       private
@@ -39,8 +54,13 @@ module Api
         @game = Game.find(params[:game_id])
       end
 
-      def forbid
-        render json: { error: "Admins only" }, status: :forbidden
+      def load_team
+        @team = @game.teams.find(params[:id])
+      end
+
+      def require_admin
+        return if @game.admin?(current_user)
+        render json: { error: "Game admin permission required" }, status: :forbidden
       end
 
       def team_payload(team)

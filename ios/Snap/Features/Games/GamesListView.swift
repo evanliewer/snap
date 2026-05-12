@@ -3,7 +3,10 @@ import SwiftUI
 struct GamesListView: View {
     @EnvironmentObject var appState: AppState
     @State private var showJoinSheet = false
-    @State private var isRefreshing = false
+    @State private var showNewGameSheet = false
+
+    var hostedGames: [APIGame] { appState.joinedGames.filter { ($0.role ?? "") == "admin" } }
+    var playedGames: [APIGame] { appState.joinedGames.filter { ($0.role ?? "") != "admin" } }
 
     var body: some View {
         NavigationStack {
@@ -12,16 +15,23 @@ struct GamesListView: View {
                     ContentUnavailableView {
                         Label("No games yet", systemImage: "gamecontroller")
                     } description: {
-                        Text("Join a game with the code your host shared.")
+                        Text("Join a game with a code, or host your own.")
                     } actions: {
-                        Button("Join game") { showJoinSheet = true }
-                            .buttonStyle(.borderedProminent)
+                        Button("Join game") { showJoinSheet = true }.buttonStyle(.borderedProminent)
+                        Button("Host a new game") { showNewGameSheet = true }
                     }
                 } else {
-                    Section {
-                        ForEach(appState.joinedGames) { game in
-                            NavigationLink(value: game) {
-                                GameRow(game: game)
+                    if !hostedGames.isEmpty {
+                        Section("Hosting") {
+                            ForEach(hostedGames) { game in
+                                NavigationLink(value: game) { GameRow(game: game) }
+                            }
+                        }
+                    }
+                    if !playedGames.isEmpty {
+                        Section(hostedGames.isEmpty ? "" : "Playing") {
+                            ForEach(playedGames) { game in
+                                NavigationLink(value: game) { GameRow(game: game) }
                             }
                         }
                     }
@@ -30,7 +40,10 @@ struct GamesListView: View {
             .navigationTitle("My games")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button { showJoinSheet = true } label: {
+                    Menu {
+                        Button { showJoinSheet = true } label: { Label("Join with code", systemImage: "qrcode.viewfinder") }
+                        Button { showNewGameSheet = true } label: { Label("Host a new game", systemImage: "plus.circle") }
+                    } label: {
                         Image(systemName: "plus")
                     }
                 }
@@ -41,9 +54,8 @@ struct GamesListView: View {
             .navigationDestination(for: APIGame.self) { game in
                 GameDetailView(game: game)
             }
-            .sheet(isPresented: $showJoinSheet) {
-                JoinGameView()
-            }
+            .sheet(isPresented: $showJoinSheet) { JoinGameView() }
+            .sheet(isPresented: $showNewGameSheet) { NewGameView() }
         }
     }
 }

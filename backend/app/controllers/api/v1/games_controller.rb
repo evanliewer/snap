@@ -1,7 +1,19 @@
 module Api
   module V1
     class GamesController < BaseController
-      before_action :load_game, only: %i[show leaderboard activity]
+      before_action :load_game, only: %i[show update destroy leaderboard activity start end]
+      before_action :require_admin, only: %i[update destroy start end]
+
+      # POST /api/v1/games
+      def create
+        game = current_user.owned_games.new(game_params.merge(status: params[:status].presence || "draft"))
+        if game.save
+          current_user.memberships.create!(game: game, role: "admin")
+          render json: GameSerializer.new(game, viewer: current_user, detail: true).as_json, status: :created
+        else
+          render_record_errors(game)
+        end
+      end
 
       # POST /api/v1/games/join  body: { join_code: "ABC123" }
       def join
@@ -17,6 +29,34 @@ module Api
 
       # GET /api/v1/games/:id
       def show
+        render json: GameSerializer.new(@game, viewer: current_user, detail: true).as_json
+      end
+
+      # PATCH /api/v1/games/:id
+      def update
+        if @game.update(game_params)
+          render json: GameSerializer.new(@game, viewer: current_user, detail: true).as_json
+        else
+          render_record_errors(@game)
+        end
+      end
+
+      # DELETE /api/v1/games/:id
+      def destroy
+        return render json: { error: "Only the owner can delete the game" }, status: :forbidden unless @game.owner_id == current_user.id
+        @game.destroy
+        head :no_content
+      end
+
+      # POST /api/v1/games/:id/start
+      def start
+        @game.update!(status: "active", starts_at: @game.starts_at || Time.current)
+        render json: GameSerializer.new(@game, viewer: current_user, detail: true).as_json
+      end
+
+      # POST /api/v1/games/:id/end
+      def end
+        @game.update!(status: "ended", ends_at: Time.current)
         render json: GameSerializer.new(@game, viewer: current_user, detail: true).as_json
       end
 
@@ -45,11 +85,19 @@ module Api
 
       private
 
+      def game_params
+        params.require(:game).permit(:title, :description, :starts_at, :ends_at, :allow_video, :show_leaderboard, :auto_approve)
+      end
+
       def load_game
         @game = Game.find(params[:id])
-        unless @game.memberships.exists?(user_id: current_user.id) || @game.owner_id == current_user.id
-          render json: { error: "Not a member of this game" }, status: :forbidden and return
-        end
+        return if @game.memberships.exists?(user_id: current_user.id) || @game.owner_id == current_user.id
+        render json: { error: "Not a member of this game" }, status: :forbidden
+      end
+
+      def require_admin
+        return if @game.admin?(current_user)
+        render json: { error: "Game admin permission required" }, status: :forbidden
       end
     end
   end

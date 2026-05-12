@@ -18,10 +18,12 @@
 		73AF2CAB2F1A458F05F6E40B /* GameDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7FF92B9FC212A90B21CAE0F /* GameDetailView.swift */; };
 		A344FD751D29CC05B28629E2 /* TeamsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6595CAD9532612D3172AE69E /* TeamsView.swift */; };
 		A8D693D51BE1F6A314F349F3 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBE12FEF6F5B9C94D13F8FC /* AppState.swift */; };
+		A9F2420B5269651767DEE211 /* GameAdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E904D105CA4E4B12B79AEE9C /* GameAdminView.swift */; };
 		B67B42615610BE830F8E46B1 /* SnapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A658863EA1446B831A1BF9DF /* SnapApp.swift */; };
 		B7ECCE12B9539D94A4DD5955 /* MissionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DE91902B2FF80E3349A130 /* MissionsListView.swift */; };
 		C840A4009F19E0EC3590EEB6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4506329C6000E69CDAA97BEA /* Assets.xcassets */; };
 		CAEB8236526A1B18C190E728 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FD6FD726B1493B014F6ABB1 /* Models.swift */; };
+		E7760D9BB83CF2A8A02D0EBA /* NewGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368668341407BDCE54517086 /* NewGameView.swift */; };
 		EC4662E72FC2FF3529446580 /* ActivityFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C16F1F31F1438159801DCE4 /* ActivityFeedView.swift */; };
 /* End PBXBuildFile section */
 
@@ -30,6 +32,7 @@
 		2806ED78A9268DEB55CEF709 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2BBE12FEF6F5B9C94D13F8FC /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		2FD6FD726B1493B014F6ABB1 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		368668341407BDCE54517086 /* NewGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGameView.swift; sourceTree = "<group>"; };
 		3BC5BC322A05E4F0343BA8C9 /* Snap.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Snap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4506329C6000E69CDAA97BEA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		56308B54E47EFF3D7DF28A33 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
@@ -43,6 +46,7 @@
 		A658863EA1446B831A1BF9DF /* SnapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapApp.swift; sourceTree = "<group>"; };
 		CB35DDDB827EEA0DE57E6417 /* AuthGateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthGateView.swift; sourceTree = "<group>"; };
 		D7FF92B9FC212A90B21CAE0F /* GameDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDetailView.swift; sourceTree = "<group>"; };
+		E904D105CA4E4B12B79AEE9C /* GameAdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameAdminView.swift; sourceTree = "<group>"; };
 		FF29EE86719027707E59CB30 /* CameraCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCaptureView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -142,6 +146,15 @@
 			path = App;
 			sourceTree = "<group>";
 		};
+		DD9A1E50AEDC43978B452F5F /* Host */ = {
+			isa = PBXGroup;
+			children = (
+				E904D105CA4E4B12B79AEE9C /* GameAdminView.swift */,
+				368668341407BDCE54517086 /* NewGameView.swift */,
+			);
+			path = Host;
+			sourceTree = "<group>";
+		};
 		E185436592635B1DD59E4225 /* Snap */ = {
 			isa = PBXGroup;
 			children = (
@@ -160,6 +173,7 @@
 				1F03650575996D26064AA4FE /* Activity */,
 				6412523586E6DB76BC584679 /* Auth */,
 				7BA51DA8A56FB32D5877CEDB /* Games */,
+				DD9A1E50AEDC43978B452F5F /* Host */,
 				BA56860B5C0E92C8E986A5E3 /* Leaderboard */,
 				9344323DDAE5013C06E4F817 /* Missions */,
 				56AB63E6138E525372688E83 /* Teams */,
@@ -239,6 +253,7 @@
 				A8D693D51BE1F6A314F349F3 /* AppState.swift in Sources */,
 				073DB7EBA053EF512517686E /* AuthGateView.swift in Sources */,
 				6CB75008D9D3066245DA2C21 /* CameraCaptureView.swift in Sources */,
+				A9F2420B5269651767DEE211 /* GameAdminView.swift in Sources */,
 				73AF2CAB2F1A458F05F6E40B /* GameDetailView.swift in Sources */,
 				41E670B92B877361E8123A05 /* GamesListView.swift in Sources */,
 				4F768FA86F12C5A22524C47B /* JoinGameView.swift in Sources */,
@@ -247,6 +262,7 @@
 				5E20E5EA353D9F9E4CBB9685 /* MissionDetailView.swift in Sources */,
 				B7ECCE12B9539D94A4DD5955 /* MissionsListView.swift in Sources */,
 				CAEB8236526A1B18C190E728 /* Models.swift in Sources */,
+				E7760D9BB83CF2A8A02D0EBA /* NewGameView.swift in Sources */,
 				B67B42615610BE830F8E46B1 /* SnapApp.swift in Sources */,
 				A344FD751D29CC05B28629E2 /* TeamsView.swift in Sources */,
 			);

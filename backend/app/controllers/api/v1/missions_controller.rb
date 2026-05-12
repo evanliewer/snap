@@ -2,28 +2,74 @@ module Api
   module V1
     class MissionsController < BaseController
       before_action :load_game
+      before_action :load_mission, only: %i[update destroy]
+      before_action :require_admin, only: %i[create update destroy]
 
       # GET /api/v1/games/:game_id/missions
       def index
+        return forbid_member unless member?
         missions = @game.missions.includes(:mission_category, :submissions).by_position
         membership = @game.membership_for(current_user)
         team_id = membership&.team_id
-        payload = missions.map do |m|
-          MissionSerializer.new(m, viewer_team_id: team_id).as_json
-        end
-        categories = @game.mission_categories.map do |c|
-          { id: c.id, name: c.name, color: c.color, position: c.position }
-        end
+        payload = missions.map { |m| MissionSerializer.new(m, viewer_team_id: team_id).as_json }
+        categories = @game.mission_categories.map { |c| { id: c.id, name: c.name, color: c.color, position: c.position } }
         render json: { categories: categories, missions: payload }
+      end
+
+      # POST /api/v1/games/:game_id/missions
+      def create
+        mission = @game.missions.new(mission_params)
+        mission.position ||= @game.missions.count
+        if mission.save
+          render json: MissionSerializer.new(mission).as_json, status: :created
+        else
+          render_record_errors(mission)
+        end
+      end
+
+      # PATCH /api/v1/games/:game_id/missions/:id
+      def update
+        if @mission.update(mission_params)
+          render json: MissionSerializer.new(@mission).as_json
+        else
+          render_record_errors(@mission)
+        end
+      end
+
+      # DELETE /api/v1/games/:game_id/missions/:id
+      def destroy
+        @mission.destroy
+        head :no_content
       end
 
       private
 
+      def mission_params
+        params.require(:mission).permit(
+          :title, :description, :points, :bonus_points, :mission_type, :position,
+          :required, :repeatable, :max_submissions_per_team, :requires_location, :mission_category_id
+        )
+      end
+
       def load_game
         @game = Game.find(params[:game_id])
-        unless @game.memberships.exists?(user_id: current_user.id) || @game.owner_id == current_user.id
-          render json: { error: "Not a member of this game" }, status: :forbidden and return
-        end
+      end
+
+      def load_mission
+        @mission = @game.missions.find(params[:id])
+      end
+
+      def member?
+        @game.owner_id == current_user.id || @game.memberships.exists?(user_id: current_user.id)
+      end
+
+      def forbid_member
+        render json: { error: "Not a member of this game" }, status: :forbidden
+      end
+
+      def require_admin
+        return if @game.admin?(current_user)
+        render json: { error: "Game admin permission required" }, status: :forbidden
       end
     end
   end

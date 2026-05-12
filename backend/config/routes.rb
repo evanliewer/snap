@@ -11,15 +11,18 @@ Rails.application.routes.draw do
       get "me", to: "me#show"
 
       post "games/join", to: "games#join"
-      resources :games, only: %i[show] do
+      resources :games, only: %i[create show update destroy] do
         member do
           get :leaderboard
           get :activity
+          post :start
+          post :end
         end
-        resources :teams, only: %i[index create] do
+        resources :teams, only: %i[index create update destroy] do
           post :join, on: :member
         end
-        resources :missions, only: %i[index]
+        resources :mission_categories, only: %i[index create update destroy], path: "categories"
+        resources :missions, only: %i[index create update destroy]
       end
 
       resources :missions, only: [] do

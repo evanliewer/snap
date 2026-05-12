@@ -122,3 +122,87 @@ struct APISubmission: Codable, Identifiable {
 struct ActivityResponse: Codable {
     let events: [APISubmission]
 }
+
+struct CategoriesResponse: Codable {
+    let categories: [MissionCategory]
+}
+
+// MARK: - Inputs for create/update endpoints
+
+struct GameInput: Encodable {
+    var title: String
+    var description: String?
+    var startsAt: Date?
+    var endsAt: Date?
+    var allowVideo: Bool
+    var showLeaderboard: Bool
+    var autoApprove: Bool
+
+    static func empty() -> GameInput {
+        GameInput(title: "", description: nil, startsAt: nil, endsAt: nil,
+                  allowVideo: false, showLeaderboard: true, autoApprove: true)
+    }
+
+    static func from(_ game: APIGame) -> GameInput {
+        GameInput(
+            title: game.title,
+            description: game.description,
+            startsAt: game.startsAt,
+            endsAt: game.endsAt,
+            allowVideo: game.allowVideo,
+            showLeaderboard: game.showLeaderboard,
+            autoApprove: game.autoApprove
+        )
+    }
+}
+
+struct TeamInput: Encodable {
+    var name: String
+    var color: String
+
+    static func empty() -> TeamInput { TeamInput(name: "", color: "#4F46E5") }
+    static func from(_ team: APITeam) -> TeamInput { TeamInput(name: team.name, color: team.color) }
+}
+
+struct CategoryInput: Encodable {
+    var name: String
+    var color: String
+    var position: Int?
+
+    static func empty(position: Int = 0) -> CategoryInput {
+        CategoryInput(name: "", color: "#10B981", position: position)
+    }
+    static func from(_ c: MissionCategory) -> CategoryInput {
+        CategoryInput(name: c.name, color: c.color, position: c.position)
+    }
+}
+
+struct MissionInput: Encodable {
+    var title: String
+    var description: String?
+    var points: Int
+    var bonusPoints: Int
+    var missionType: String
+    var position: Int?
+    var required: Bool
+    var repeatable: Bool
+    var maxSubmissionsPerTeam: Int
+    var requiresLocation: Bool
+    var missionCategoryId: Int?
+
+    static func empty(position: Int = 0) -> MissionInput {
+        MissionInput(title: "", description: nil, points: 100, bonusPoints: 0,
+                     missionType: "photo", position: position, required: false,
+                     repeatable: false, maxSubmissionsPerTeam: 1, requiresLocation: false,
+                     missionCategoryId: nil)
+    }
+    static func from(_ m: APIMission) -> MissionInput {
+        MissionInput(
+            title: m.title, description: m.description, points: m.points,
+            bonusPoints: m.bonusPoints, missionType: m.missionType, position: m.position,
+            required: m.required, repeatable: m.repeatable,
+            maxSubmissionsPerTeam: m.maxSubmissionsPerTeam,
+            requiresLocation: m.requiresLocation, missionCategoryId: m.categoryId
+        )
+    }
+}

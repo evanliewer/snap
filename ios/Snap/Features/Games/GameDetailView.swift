@@ -3,7 +3,10 @@ import SwiftUI
 struct GameDetailView: View {
     let game: APIGame
     @State private var section: Section = .missions
+    @State private var showAdmin = false
     enum Section: String, CaseIterable { case missions = "Missions", leaderboard = "Leaderboard", activity = "Activity", teams = "Teams" }
+
+    var isAdmin: Bool { (game.role ?? "") == "admin" || (game.membership?.role ?? "") == "admin" }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -22,5 +25,13 @@ struct GameDetailView: View {
         }
         .navigationTitle(game.title)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if isAdmin {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button { showAdmin = true } label: { Image(systemName: "wrench.and.screwdriver") }
+                }
+            }
+        }
+        .sheet(isPresented: $showAdmin) { GameAdminView(game: game) }
     }
 }

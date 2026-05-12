@@ -85,6 +85,26 @@ final class APIClient {
         try await get("/api/v1/games/\(id)")
     }
 
+    func createGame(input: GameInput) async throws -> APIGame {
+        try await post("/api/v1/games", body: ["game": input])
+    }
+
+    func updateGame(id: Int, input: GameInput) async throws -> APIGame {
+        try await patch("/api/v1/games/\(id)", body: ["game": input])
+    }
+
+    func deleteGame(id: Int) async throws {
+        _ = try await request("/api/v1/games/\(id)", method: "DELETE", body: nil as String?)
+    }
+
+    func startGame(id: Int) async throws -> APIGame {
+        try await post("/api/v1/games/\(id)/start", body: [String: String]())
+    }
+
+    func endGame(id: Int) async throws -> APIGame {
+        try await post("/api/v1/games/\(id)/end", body: [String: String]())
+    }
+
     func leaderboard(gameId: Int) async throws -> LeaderboardResponse {
         try await get("/api/v1/games/\(gameId)/leaderboard")
     }
@@ -103,10 +123,52 @@ final class APIClient {
         try await post("/api/v1/games/\(gameId)/teams/\(teamId)/join", body: [String: String]())
     }
 
+    func createTeam(gameId: Int, input: TeamInput) async throws -> APITeam {
+        try await post("/api/v1/games/\(gameId)/teams", body: ["team": input])
+    }
+
+    func updateTeam(gameId: Int, teamId: Int, input: TeamInput) async throws -> APITeam {
+        try await patch("/api/v1/games/\(gameId)/teams/\(teamId)", body: ["team": input])
+    }
+
+    func deleteTeam(gameId: Int, teamId: Int) async throws {
+        _ = try await request("/api/v1/games/\(gameId)/teams/\(teamId)", method: "DELETE", body: nil as String?)
+    }
+
+    // MARK: Categories
+
+    func categories(gameId: Int) async throws -> CategoriesResponse {
+        try await get("/api/v1/games/\(gameId)/categories")
+    }
+
+    func createCategory(gameId: Int, input: CategoryInput) async throws -> MissionCategory {
+        try await post("/api/v1/games/\(gameId)/categories", body: ["mission_category": input])
+    }
+
+    func updateCategory(gameId: Int, categoryId: Int, input: CategoryInput) async throws -> MissionCategory {
+        try await patch("/api/v1/games/\(gameId)/categories/\(categoryId)", body: ["mission_category": input])
+    }
+
+    func deleteCategory(gameId: Int, categoryId: Int) async throws {
+        _ = try await request("/api/v1/games/\(gameId)/categories/\(categoryId)", method: "DELETE", body: nil as String?)
+    }
+
     // MARK: Missions
 
     func missions(gameId: Int) async throws -> MissionsResponse {
         try await get("/api/v1/games/\(gameId)/missions")
+    }
+
+    func createMission(gameId: Int, input: MissionInput) async throws -> APIMission {
+        try await post("/api/v1/games/\(gameId)/missions", body: ["mission": input])
+    }
+
+    func updateMission(gameId: Int, missionId: Int, input: MissionInput) async throws -> APIMission {
+        try await patch("/api/v1/games/\(gameId)/missions/\(missionId)", body: ["mission": input])
+    }
+
+    func deleteMission(gameId: Int, missionId: Int) async throws {
+        _ = try await request("/api/v1/games/\(gameId)/missions/\(missionId)", method: "DELETE", body: nil as String?)
     }
 
     // MARK: Submissions
@@ -151,11 +213,23 @@ final class APIClient {
         return try decode(data: data, response: response)
     }
 
+    private func patch<T: Decodable, B: Encodable>(_ path: String, body: B, authed: Bool = true) async throws -> T {
+        let (data, response) = try await request(path, method: "PATCH", body: body, authed: authed)
+        return try decode(data: data, response: response)
+    }
+
+    private let encoder: JSONEncoder = {
+        let e = JSONEncoder()
+        e.keyEncodingStrategy = .convertToSnakeCase
+        e.dateEncodingStrategy = .iso8601
+        return e
+    }()
+
     private func request<B: Encodable>(_ path: String, method: String, body: B?, authed: Bool = true) async throws -> (Data, URLResponse) {
         var request = try buildRequest(path: path, method: method, authed: authed)
         if let body {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = try JSONEncoder().encode(body)
+            request.httpBody = try encoder.encode(body)
         }
         do {
             return try await session.data(for: request)
