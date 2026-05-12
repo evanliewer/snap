@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Snap — Photo Scavenger Hunts</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+  </head>
+  <body class="bg-slate-50 text-slate-900 min-h-screen">
+    <nav class="bg-white border-b border-slate-200">
+      <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+        <%= link_to root_path, class: "flex items-center gap-2 font-bold text-xl text-indigo-600" do %>
+          <span class="inline-block w-8 h-8 bg-indigo-600 rounded-lg text-white grid place-items-center">S</span>
+          Snap
+        <% end %>
+        <div class="flex items-center gap-3 text-sm">
+          <% if user_signed_in? %>
+            <%= link_to "Dashboard", root_path, class: "text-slate-600 hover:text-slate-900" %>
+            <%= link_to "New game", new_game_path, class: "px-3 py-1.5 rounded-md bg-indigo-600 text-white hover:bg-indigo-700" %>
+            <span class="text-slate-500"><%= current_user.name %></span>
+            <%= button_to "Log out", logout_path, method: :delete, class: "text-slate-500 hover:text-red-600", form: { data: { turbo_confirm: "Sign out?" } } %>
+          <% else %>
+            <%= link_to "Log in", login_path, class: "text-slate-600 hover:text-slate-900" %>
+            <%= link_to "Sign up", signup_path, class: "px-3 py-1.5 rounded-md bg-indigo-600 text-white hover:bg-indigo-700" %>
+          <% end %>
+        </div>
+      </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+      <% flash.each do |key, value| %>
+        <% next if value.blank? %>
+        <div class="mb-4 px-4 py-3 rounded-md <%= key.to_s == 'alert' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200' %>">
+          <%= value %>
+        </div>
+      <% end %>
+      <%= yield %>
+    </main>
+  </body>
+</html>

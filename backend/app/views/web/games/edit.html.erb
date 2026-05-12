@@ -1,0 +1,4 @@
+<h1 class="text-2xl font-bold mb-6">Edit <%= @game.title %></h1>
+<%= render "form", game: @game %>
+
+<%= button_to "Delete game", @game, method: :delete, class: "mt-6 text-red-600 hover:text-red-800 text-sm", form: { data: { turbo_confirm: "Delete this game and all submissions?" } } %>

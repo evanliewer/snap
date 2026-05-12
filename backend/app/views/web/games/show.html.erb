@@ -1,0 +1,136 @@
+<div class="space-y-8">
+  <header class="bg-white p-6 rounded-xl border border-slate-200 flex flex-wrap items-start justify-between gap-4">
+    <div class="space-y-2">
+      <div class="flex items-center gap-3">
+        <h1 class="text-3xl font-bold"><%= @game.title %></h1>
+        <span class="text-xs uppercase font-semibold px-2 py-1 rounded-full <%= @game.active? ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600' %>"><%= @game.status %></span>
+      </div>
+      <p class="text-slate-600 max-w-2xl"><%= @game.description %></p>
+      <p class="text-sm text-slate-500">Join code: <span class="font-mono font-bold text-indigo-700"><%= @game.join_code %></span></p>
+    </div>
+    <% if @game.admin?(current_user) %>
+      <div class="flex flex-wrap gap-2">
+        <% if @game.status != "active" %>
+          <%= button_to "Start game", start_game_path(@game), method: :post, class: "px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700" %>
+        <% else %>
+          <%= button_to "End game", end_game_path(@game), method: :post, class: "px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700" %>
+        <% end %>
+        <%= link_to "Edit", edit_game_path(@game), class: "px-4 py-2 bg-slate-100 text-slate-700 rounded-md hover:bg-slate-200" %>
+      </div>
+    <% end %>
+  </header>
+
+  <div class="grid lg:grid-cols-3 gap-6">
+    <section class="bg-white p-6 rounded-xl border border-slate-200 space-y-3">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold">Teams (<%= @teams.size %>)</h2>
+        <% if @game.admin?(current_user) %>
+          <%= link_to "+ Add", new_game_team_path(@game), class: "text-sm text-indigo-600 hover:underline" %>
+        <% end %>
+      </div>
+      <ul class="space-y-2">
+        <% @teams.each do |team| %>
+          <li class="flex items-center gap-3">
+            <span class="w-4 h-4 rounded" style="background:<%= team.color %>"></span>
+            <span class="flex-1"><%= team.name %></span>
+            <span class="text-xs text-slate-500"><%= team.memberships.count %> players</span>
+          </li>
+        <% end %>
+      </ul>
+      <%= link_to "Manage teams →", game_teams_path(@game), class: "text-sm text-indigo-600 hover:underline" if @game.admin?(current_user) %>
+    </section>
+
+    <section class="bg-white p-6 rounded-xl border border-slate-200 space-y-3">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold">Categories (<%= @categories.size %>)</h2>
+        <% if @game.admin?(current_user) %>
+          <%= link_to "+ Add", new_game_mission_category_path(@game), class: "text-sm text-indigo-600 hover:underline" %>
+        <% end %>
+      </div>
+      <ul class="space-y-2">
+        <% @categories.each do |cat| %>
+          <li class="flex items-center gap-3">
+            <span class="w-4 h-4 rounded" style="background:<%= cat.color %>"></span>
+            <span><%= cat.name %></span>
+          </li>
+        <% end %>
+      </ul>
+    </section>
+
+    <section class="bg-white p-6 rounded-xl border border-slate-200 space-y-3">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold">Missions (<%= @missions.size %>)</h2>
+        <% if @game.admin?(current_user) %>
+          <%= link_to "+ Add", new_game_mission_path(@game), class: "text-sm text-indigo-600 hover:underline" %>
+        <% end %>
+      </div>
+      <ul class="space-y-2">
+        <% @missions.first(8).each do |m| %>
+          <li class="text-sm flex justify-between">
+            <span class="truncate"><%= m.title %></span>
+            <span class="text-slate-400 ml-2"><%= m.points %> pts</span>
+          </li>
+        <% end %>
+      </ul>
+      <%= link_to "All missions →", game_missions_path(@game), class: "text-sm text-indigo-600 hover:underline" %>
+    </section>
+  </div>
+
+  <section class="bg-white p-6 rounded-xl border border-slate-200">
+    <h2 class="text-lg font-semibold mb-3">Leaderboard</h2>
+    <% if @leaderboard.empty? %>
+      <p class="text-slate-500 text-sm">No teams yet.</p>
+    <% else %>
+      <table class="w-full text-sm">
+        <thead class="text-slate-500 text-xs uppercase">
+          <tr><th class="text-left py-2">#</th><th class="text-left">Team</th><th class="text-right">Submissions</th><th class="text-right">Points</th></tr>
+        </thead>
+        <tbody>
+          <% @leaderboard.each_with_index do |team, i| %>
+            <tr class="border-t border-slate-100">
+              <td class="py-2 font-mono text-slate-400"><%= i + 1 %></td>
+              <td><span class="inline-block w-3 h-3 rounded mr-2 align-middle" style="background:<%= team.color %>"></span><%= team.name %></td>
+              <td class="text-right text-slate-500"><%= team.attributes["submission_count"] %></td>
+              <td class="text-right font-bold"><%= team.attributes["total_points"] %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </section>
+
+  <section class="bg-white p-6 rounded-xl border border-slate-200">
+    <h2 class="text-lg font-semibold mb-3">Recent activity</h2>
+    <% if @submissions.empty? %>
+      <p class="text-slate-500 text-sm">No submissions yet.</p>
+    <% else %>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% @submissions.each do |sub| %>
+          <div class="border border-slate-200 rounded-lg overflow-hidden">
+            <% if sub.photo.attached? %>
+              <%= image_tag sub.photo, class: "w-full h-40 object-cover" %>
+            <% end %>
+            <div class="p-3 text-sm">
+              <div class="flex items-center justify-between">
+                <span class="font-medium truncate"><%= sub.mission.title %></span>
+                <span class="text-xs px-2 py-0.5 rounded-full <%= sub.status == 'approved' ? 'bg-emerald-100 text-emerald-700' : sub.status == 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700' %>"><%= sub.status %></span>
+              </div>
+              <p class="text-xs text-slate-500 mt-1"><%= sub.team.name %> — <%= sub.user.name %></p>
+              <% if sub.caption.present? %><p class="text-xs mt-1 italic"><%= sub.caption %></p><% end %>
+              <% if @game.admin?(current_user) %>
+                <div class="flex gap-2 mt-3">
+                  <% if sub.status != "approved" %>
+                    <%= button_to "Approve", submission_path(sub, submission: { status: "approved", points_awarded: sub.mission.points }), method: :patch, class: "text-xs px-2 py-1 bg-emerald-600 text-white rounded" %>
+                  <% end %>
+                  <% if sub.status != "rejected" %>
+                    <%= button_to "Reject", submission_path(sub, submission: { status: "rejected", points_awarded: 0 }), method: :patch, class: "text-xs px-2 py-1 bg-red-600 text-white rounded" %>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </section>
+</div>

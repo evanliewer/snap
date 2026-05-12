@@ -1,0 +1,33 @@
+<%= form_with model: game, local: true, multipart: true, class: "space-y-4 bg-white p-6 rounded-xl border border-slate-200" do |f| %>
+  <div>
+    <%= f.label :title, class: "block text-sm font-medium mb-1" %>
+    <%= f.text_field :title, required: true, class: "w-full border border-slate-300 rounded-md px-3 py-2" %>
+  </div>
+  <div>
+    <%= f.label :description, class: "block text-sm font-medium mb-1" %>
+    <%= f.text_area :description, rows: 3, class: "w-full border border-slate-300 rounded-md px-3 py-2" %>
+  </div>
+  <div class="grid sm:grid-cols-2 gap-4">
+    <div>
+      <%= f.label :starts_at, class: "block text-sm font-medium mb-1" %>
+      <%= f.datetime_local_field :starts_at, class: "w-full border border-slate-300 rounded-md px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :ends_at, class: "block text-sm font-medium mb-1" %>
+      <%= f.datetime_local_field :ends_at, class: "w-full border border-slate-300 rounded-md px-3 py-2" %>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-3 gap-3">
+    <label class="flex items-center gap-2"><%= f.check_box :allow_video %> Allow videos</label>
+    <label class="flex items-center gap-2"><%= f.check_box :show_leaderboard %> Show leaderboard</label>
+    <label class="flex items-center gap-2"><%= f.check_box :auto_approve %> Auto-approve submissions</label>
+  </div>
+  <div>
+    <%= f.label :cover_image, class: "block text-sm font-medium mb-1" %>
+    <%= f.file_field :cover_image, accept: "image/*" %>
+  </div>
+  <div class="flex gap-2">
+    <%= f.submit (game.persisted? ? "Save changes" : "Create game"), class: "px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700" %>
+    <%= link_to "Cancel", (game.persisted? ? game : root_path), class: "px-4 py-2 bg-slate-100 text-slate-700 rounded-md hover:bg-slate-200" %>
+  </div>
+<% end %>

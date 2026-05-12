@@ -1,0 +1,21 @@
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold">Teams — <%= @game.title %></h1>
+    <%= link_to "+ New team", new_game_team_path(@game), class: "px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700" %>
+  </div>
+  <div class="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100">
+    <% @teams.each do |team| %>
+      <div class="p-4 flex items-center gap-3">
+        <span class="w-5 h-5 rounded" style="background:<%= team.color %>"></span>
+        <span class="flex-1 font-medium"><%= team.name %></span>
+        <span class="text-sm text-slate-500"><%= team.memberships.count %> players · <%= team.total_points %> pts</span>
+        <%= link_to "Edit", edit_game_team_path(@game, team), class: "text-sm text-indigo-600 hover:underline" %>
+        <%= button_to "Delete", game_team_path(@game, team), method: :delete, class: "text-sm text-red-600 hover:underline", form: { data: { turbo_confirm: "Delete team?" } } %>
+      </div>
+    <% end %>
+    <% if @teams.empty? %>
+      <p class="p-6 text-slate-500 text-sm">No teams yet.</p>
+    <% end %>
+  </div>
+  <%= link_to "← Back to game", @game, class: "text-sm text-slate-500 hover:underline" %>
+</div>

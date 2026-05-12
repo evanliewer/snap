@@ -1,0 +1,43 @@
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+
+# Logs / temp
+*.log
+/backend/log/*
+/backend/tmp/*
+!/backend/log/.keep
+!/backend/tmp/.keep
+
+# Rails secrets
+/backend/config/master.key
+/backend/config/credentials/*.key
+
+# Rails dev artifacts
+/backend/storage/*
+!/backend/storage/.keep
+/backend/.byebug_history
+/backend/node_modules/
+
+# iOS / Xcode
+/ios/Snap.xcodeproj/project.xcworkspace/xcuserdata/
+/ios/Snap.xcodeproj/xcuserdata/
+/ios/*.xcworkspace/xcuserdata/
+/ios/build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+
+# Generated Xcode project (regenerate with `xcodegen generate`)
+# (Comment the next line if you want the project tracked.)
+# /ios/Snap.xcodeproj/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Misc
+*.swp

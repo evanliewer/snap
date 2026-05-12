@@ -1,0 +1,40 @@
+<div class="space-y-8">
+  <header class="flex items-center justify-between">
+    <h1 class="text-3xl font-bold">Your games</h1>
+    <%= link_to "+ New game", new_game_path, class: "px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700" %>
+  </header>
+
+  <section>
+    <h2 class="text-lg font-semibold mb-3 text-slate-600">Games you run</h2>
+    <% if @owned_games.empty? %>
+      <p class="text-slate-500">No games yet. <%= link_to "Create your first game.", new_game_path, class: "text-indigo-600 hover:underline" %></p>
+    <% else %>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% @owned_games.each do |game| %>
+          <%= link_to game, class: "block bg-white p-5 rounded-xl border border-slate-200 hover:border-indigo-400 transition" do %>
+            <div class="flex items-start justify-between">
+              <h3 class="font-semibold"><%= game.title %></h3>
+              <span class="text-xs uppercase font-medium px-2 py-0.5 rounded-full <%= game.active? ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600' %>"><%= game.status %></span>
+            </div>
+            <p class="text-sm text-slate-500 mt-2 truncate"><%= game.description.presence || "No description yet." %></p>
+            <p class="mt-3 text-xs text-slate-400 font-mono">Code: <%= game.join_code %></p>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </section>
+
+  <% if @joined_games.any? %>
+    <section>
+      <h2 class="text-lg font-semibold mb-3 text-slate-600">Games you've joined</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% @joined_games.each do |game| %>
+          <%= link_to game, class: "block bg-white p-5 rounded-xl border border-slate-200 hover:border-indigo-400" do %>
+            <h3 class="font-semibold"><%= game.title %></h3>
+            <p class="text-xs text-slate-400 font-mono mt-2">Code: <%= game.join_code %></p>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+</div>

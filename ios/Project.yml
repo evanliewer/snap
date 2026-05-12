@@ -1,0 +1,51 @@
+name: Snap
+options:
+  bundleIdPrefix: com.evanliewer
+  deploymentTarget:
+    iOS: "17.0"
+  developmentLanguage: en
+  createIntermediateGroups: true
+
+settings:
+  base:
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "5.10"
+
+targets:
+  Snap:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Snap
+        excludes:
+          - "Info.plist"
+    resources:
+      - Snap/Resources/Assets.xcassets
+    info:
+      path: Snap/App/Info.plist
+      properties:
+        CFBundleDisplayName: Snap
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen:
+          UIColorName: AccentColor
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        NSCameraUsageDescription: Snap needs camera access so you can capture mission photos.
+        NSPhotoLibraryUsageDescription: Snap needs photo library access so you can submit existing photos for missions.
+        NSPhotoLibraryAddUsageDescription: Snap can save the photos you submit for missions.
+        NSLocationWhenInUseUsageDescription: Snap uses your location to tag mission submissions when required.
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.evanliewer.snap
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SUPPORTS_MACCATALYST: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+        SWIFT_EMIT_LOC_STRINGS: YES
+        IPHONEOS_DEPLOYMENT_TARGET: "17.0"

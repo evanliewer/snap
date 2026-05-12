@@ -1,0 +1,25 @@
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold">Missions — <%= @game.title %></h1>
+    <%= link_to "+ New mission", new_game_mission_path(@game), class: "px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700" %>
+  </div>
+  <div class="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100">
+    <% @missions.each do |m| %>
+      <div class="p-4 flex items-center gap-3">
+        <span class="text-xs font-mono text-slate-400 w-8 text-right">#<%= m.position %></span>
+        <% if m.mission_category %>
+          <span class="text-xs px-2 py-0.5 rounded-full text-white" style="background:<%= m.mission_category.color %>"><%= m.mission_category.name %></span>
+        <% end %>
+        <span class="flex-1 font-medium"><%= m.title %></span>
+        <span class="text-xs text-slate-500 uppercase"><%= m.mission_type %></span>
+        <span class="text-sm font-bold text-indigo-600 w-16 text-right"><%= m.points %> pts</span>
+        <%= link_to "Edit", edit_game_mission_path(@game, m), class: "text-sm text-indigo-600 hover:underline" %>
+        <%= button_to "Delete", game_mission_path(@game, m), method: :delete, class: "text-sm text-red-600 hover:underline", form: { data: { turbo_confirm: "Delete mission?" } } %>
+      </div>
+    <% end %>
+    <% if @missions.empty? %>
+      <p class="p-6 text-slate-500 text-sm">No missions yet.</p>
+    <% end %>
+  </div>
+  <%= link_to "← Back to game", @game, class: "text-sm text-slate-500 hover:underline" %>
+</div>
