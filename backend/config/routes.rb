@@ -71,5 +71,9 @@ Rails.application.routes.draw do
     end
   end
 
+  # Public spectator (no auth)
+  get "g/:join_code",       to: "web/spectator#show",  as: :spectator
+  get "g/:join_code/recap", to: "web/spectator#recap", as: :spectator_recap
+
   root "web/dashboards#show"
 end

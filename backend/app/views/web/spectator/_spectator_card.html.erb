@@ -1,0 +1,22 @@
+<div class="border border-slate-200 rounded-lg overflow-hidden">
+  <% if sub.photo.attached? %>
+    <%= image_tag sub.photo, class: "w-full h-44 object-cover" %>
+  <% else %>
+    <div class="w-full h-44 bg-slate-100 flex items-center justify-center text-slate-400">No photo</div>
+  <% end %>
+  <div class="p-3 text-sm">
+    <div class="flex items-center justify-between">
+      <span class="font-medium truncate"><%= sub.mission.title %></span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">+<%= sub.points_awarded %></span>
+    </div>
+    <p class="text-xs text-slate-500 mt-1">
+      <span class="inline-block w-2 h-2 rounded mr-1 align-middle" style="background:<%= sub.team.color %>"></span>
+      <%= sub.team.name %> — <%= sub.user.name %>
+    </p>
+    <% if sub.caption.present? %><p class="text-xs mt-2 italic">“<%= sub.caption %>”</p><% end %>
+    <% reaction_total = sub.reactions.count %>
+    <% if reaction_total > 0 %>
+      <p class="text-xs text-slate-500 mt-2">❤️ <%= reaction_total %></p>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,77 @@
+<% content_for(:title, "#{@game.title} — Recap") %>
+
+<div class="space-y-6">
+  <header class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-2xl p-6 shadow">
+    <p class="uppercase text-xs tracking-widest opacity-80">Final recap</p>
+    <h1 class="text-3xl sm:text-4xl font-bold mt-1"><%= @game.title %></h1>
+    <p class="opacity-90 mt-2"><%= @game.description %></p>
+    <% if @top_team %>
+      <div class="mt-4 flex items-center gap-3">
+        <span class="text-3xl">🏆</span>
+        <div>
+          <p class="text-sm opacity-80">Winning team</p>
+          <p class="text-xl font-bold"><%= @top_team.name %> — <%= @top_team.attributes["total_points"] %> pts</p>
+        </div>
+      </div>
+    <% end %>
+  </header>
+
+  <div class="grid grid-cols-3 gap-3">
+    <div class="bg-white p-4 rounded-xl border border-slate-200 text-center">
+      <p class="text-2xl font-bold"><%= @total_submissions %></p>
+      <p class="text-xs text-slate-500 uppercase tracking-wide">Approved submissions</p>
+    </div>
+    <div class="bg-white p-4 rounded-xl border border-slate-200 text-center">
+      <p class="text-2xl font-bold"><%= @total_players %></p>
+      <p class="text-xs text-slate-500 uppercase tracking-wide">Players</p>
+    </div>
+    <div class="bg-white p-4 rounded-xl border border-slate-200 text-center">
+      <p class="text-2xl font-bold"><%= @teams.size %></p>
+      <p class="text-xs text-slate-500 uppercase tracking-wide">Teams</p>
+    </div>
+  </div>
+
+  <section class="bg-white p-6 rounded-xl border border-slate-200">
+    <h2 class="text-lg font-semibold mb-3">Final standings</h2>
+    <ol class="space-y-2">
+      <% @teams.each_with_index do |team, i| %>
+        <li class="flex items-center gap-3 py-2 <%= 'border-t border-slate-100' unless i.zero? %>">
+          <span class="text-xl font-bold w-8 <%= i.zero? ? 'text-amber-500' : 'text-slate-400' %>"><%= i + 1 %></span>
+          <span class="w-4 h-4 rounded" style="background:<%= team.color %>"></span>
+          <span class="flex-1 font-medium"><%= team.name %></span>
+          <span class="font-bold"><%= team.attributes["total_points"] %> pts</span>
+        </li>
+      <% end %>
+    </ol>
+  </section>
+
+  <% if @top_reactions.any? %>
+    <section class="bg-white p-6 rounded-xl border border-slate-200">
+      <h2 class="text-lg font-semibold mb-3">Top moments</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% @top_reactions.each do |sub| %>
+          <%= render "spectator_card", sub: sub %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <% if @leader_per_mission.any? %>
+    <section class="bg-white p-6 rounded-xl border border-slate-200">
+      <h2 class="text-lg font-semibold mb-3">First to complete</h2>
+      <ul class="space-y-2">
+        <% @leader_per_mission.each do |row| %>
+          <li class="flex items-center gap-3 text-sm">
+            <span class="inline-block w-3 h-3 rounded" style="background:<%= row[:submission].team.color %>"></span>
+            <span class="font-medium"><%= row[:mission].title %></span>
+            <span class="text-slate-500">— <%= row[:submission].team.name %></span>
+          </li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
+
+  <footer class="text-center text-xs text-slate-400 py-6">
+    Join code was <span class="font-mono"><%= @game.join_code %></span>. Snap on iOS · <%= link_to "Live view", spectator_path(@game.join_code), class: "underline" %>
+  </footer>
+</div>

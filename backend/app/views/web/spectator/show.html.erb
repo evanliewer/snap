@@ -1,0 +1,67 @@
+<% content_for(:title, "#{@game.title} — Live") %>
+
+<div class="space-y-6">
+  <header class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl p-6 shadow">
+    <p class="uppercase text-xs tracking-widest opacity-80">Live spectator view</p>
+    <h1 class="text-3xl sm:text-4xl font-bold mt-1"><%= @game.title %></h1>
+    <p class="opacity-90 mt-2 max-w-2xl"><%= @game.description %></p>
+    <div class="flex items-center gap-3 mt-4">
+      <span class="text-xs uppercase font-semibold px-2 py-1 rounded-full bg-white/20"><%= @game.status %></span>
+      <span class="text-xs font-mono opacity-80">Join code: <%= @game.join_code %></span>
+      <% if @game.status == "ended" %>
+        <%= link_to "View recap →", spectator_recap_path(@game.join_code), class: "text-xs underline opacity-90" %>
+      <% end %>
+    </div>
+  </header>
+
+  <section class="bg-white p-6 rounded-xl border border-slate-200">
+    <h2 class="text-lg font-semibold mb-3">Leaderboard</h2>
+    <% if @teams.empty? %>
+      <p class="text-slate-500 text-sm">No teams yet.</p>
+    <% else %>
+      <table class="w-full text-sm">
+        <thead class="text-slate-500 text-xs uppercase">
+          <tr><th class="text-left py-2 w-10">#</th><th class="text-left">Team</th><th class="text-right">Subs</th><th class="text-right">Points</th></tr>
+        </thead>
+        <tbody>
+          <% @teams.each_with_index do |team, i| %>
+            <tr class="border-t border-slate-100">
+              <td class="py-2 font-mono text-slate-400"><%= i + 1 %></td>
+              <td><span class="inline-block w-3 h-3 rounded mr-2 align-middle" style="background:<%= team.color %>"></span><%= team.name %></td>
+              <td class="text-right text-slate-500"><%= team.attributes["submission_count"] %></td>
+              <td class="text-right font-bold"><%= team.attributes["total_points"] %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </section>
+
+  <% if @top_reactions.any? %>
+    <section class="bg-white p-6 rounded-xl border border-slate-200">
+      <h2 class="text-lg font-semibold mb-3">Crowd favorites</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% @top_reactions.each do |sub| %>
+          <%= render "spectator_card", sub: sub %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <section class="bg-white p-6 rounded-xl border border-slate-200">
+    <h2 class="text-lg font-semibold mb-3">Recent submissions</h2>
+    <% if @recent.empty? %>
+      <p class="text-slate-500 text-sm">No submissions yet. Refresh in a bit.</p>
+    <% else %>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% @recent.each do |sub| %>
+          <%= render "spectator_card", sub: sub %>
+        <% end %>
+      </div>
+    <% end %>
+  </section>
+
+  <footer class="text-center text-xs text-slate-400 py-4">
+    Want to play? Open Snap on iOS and join with <span class="font-mono"><%= @game.join_code %></span>.
+  </footer>
+</div>
