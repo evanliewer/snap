@@ -2,6 +2,7 @@ class User < ApplicationRecord
   has_secure_password
 
   has_many :sessions, dependent: :destroy
+  has_many :password_resets, dependent: :destroy
   has_many :memberships, dependent: :destroy
   has_many :games_as_player, through: :memberships, source: :game
   has_many :owned_games, class_name: "Game", foreign_key: :owner_id, dependent: :destroy

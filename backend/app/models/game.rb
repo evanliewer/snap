@@ -19,6 +19,20 @@ class Game < ApplicationRecord
   validates :status, inclusion: { in: STATUSES }
 
   scope :live, -> { where(status: %w[scheduled active]) }
+  scope :unarchived, -> { where(archived_at: nil) }
+  scope :archived, -> { where.not(archived_at: nil) }
+
+  def archived?
+    archived_at.present?
+  end
+
+  def archive!
+    update!(archived_at: Time.current, status: "archived")
+  end
+
+  def unarchive!
+    update!(archived_at: nil, status: status == "archived" ? "draft" : status)
+  end
 
   def active?
     status == "active"

@@ -1,8 +1,8 @@
 module Api
   module V1
     class GamesController < BaseController
-      before_action :load_game, only: %i[show update destroy leaderboard activity start end duplicate cover]
-      before_action :require_admin, only: %i[update destroy start end duplicate cover]
+      before_action :load_game, only: %i[show update destroy leaderboard activity start end duplicate cover archive unarchive]
+      before_action :require_admin, only: %i[update destroy start end duplicate cover archive unarchive]
 
       # POST /api/v1/games
       def create
@@ -57,6 +57,18 @@ module Api
       # POST /api/v1/games/:id/end
       def end
         @game.update!(status: "ended", ends_at: Time.current)
+        render json: GameSerializer.new(@game, viewer: current_user, detail: true).as_json
+      end
+
+      # POST /api/v1/games/:id/archive
+      def archive
+        @game.archive!
+        render json: GameSerializer.new(@game, viewer: current_user, detail: true).as_json
+      end
+
+      # POST /api/v1/games/:id/unarchive
+      def unarchive
+        @game.unarchive!
         render json: GameSerializer.new(@game, viewer: current_user, detail: true).as_json
       end
 

@@ -10,6 +10,8 @@ Rails.application.routes.draw do
       post "login",  to: "sessions#create"
       delete "logout", to: "sessions#destroy"
 
+      resources :password_resets, only: %i[create update], param: :id
+
       get "me", to: "me#show"
 
       post "games/join", to: "games#join"
@@ -21,6 +23,8 @@ Rails.application.routes.draw do
           post :end
           post :duplicate
           patch :cover
+          post :archive
+          post :unarchive
         end
         resources :teams, only: %i[index create update destroy] do
           post :join, on: :member

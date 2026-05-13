@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_12_225308) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_12_235641) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -54,6 +54,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_12_225308) do
 
   create_table "games", force: :cascade do |t|
     t.boolean "allow_video", default: false, null: false
+    t.datetime "archived_at"
     t.boolean "auto_approve", default: true, null: false
     t.datetime "created_at", null: false
     t.text "description"
@@ -65,6 +66,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_12_225308) do
     t.string "status", default: "draft", null: false
     t.string "title", null: false
     t.datetime "updated_at", null: false
+    t.index ["archived_at"], name: "index_games_on_archived_at"
     t.index ["join_code"], name: "index_games_on_join_code", unique: true
     t.index ["owner_id"], name: "index_games_on_owner_id"
     t.index ["status"], name: "index_games_on_status"
@@ -119,6 +121,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_12_225308) do
     t.index ["game_id", "position"], name: "index_missions_on_game_id_and_position"
     t.index ["game_id"], name: "index_missions_on_game_id"
     t.index ["mission_category_id"], name: "index_missions_on_mission_category_id"
+  end
+
+  create_table "password_resets", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "expires_at", null: false
+    t.string "token", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["token"], name: "index_password_resets_on_token", unique: true
+    t.index ["user_id"], name: "index_password_resets_on_user_id"
   end
 
   create_table "reactions", force: :cascade do |t|
@@ -196,6 +208,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_12_225308) do
   add_foreign_key "mission_categories", "games"
   add_foreign_key "missions", "games"
   add_foreign_key "missions", "mission_categories"
+  add_foreign_key "password_resets", "users"
   add_foreign_key "reactions", "submissions"
   add_foreign_key "reactions", "users"
   add_foreign_key "sessions", "users"

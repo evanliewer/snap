@@ -32,6 +32,13 @@ gem "image_processing", "~> 1.2"
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 gem "rack-cors"
 
+# Throttle abusive clients (login, signup, etc.)
+gem "rack-attack"
+
+# Production error capture
+gem "sentry-ruby", require: false
+gem "sentry-rails", require: false
+
 # AWS S3 for Active Storage in production (Render)
 gem "aws-sdk-s3", require: false
 
