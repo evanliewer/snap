@@ -3,12 +3,23 @@ module Api
     class TeamsController < BaseController
       before_action :load_game
       before_action :load_team, only: %i[update destroy join]
-      before_action :require_admin, only: %i[create update destroy]
+      before_action :require_admin, only: %i[create update destroy reorder]
 
       # GET /api/v1/games/:game_id/teams
       def index
-        teams = @game.teams.order(:name)
+        teams = @game.teams.order(:position, :name)
         render json: { teams: teams.map { |t| team_payload(t) } }
+      end
+
+      # POST /api/v1/games/:game_id/teams/reorder  body: { ids: [...] }
+      def reorder
+        ids = Array(params[:ids]).map(&:to_i)
+        Team.transaction do
+          ids.each_with_index do |id, idx|
+            @game.teams.where(id: id).update_all(position: idx)
+          end
+        end
+        head :no_content
       end
 
       # POST /api/v1/games/:game_id/teams

@@ -131,15 +131,20 @@ module Api
       # GET /api/v1/games/:id/leaderboard
       def leaderboard
         teams = @game.leaderboard
+        total_missions = @game.missions.count
         render json: {
           game_id: @game.id,
+          total_missions: total_missions,
           teams: teams.map do |t|
+            completed = @game.missions.joins(:submissions).where(submissions: { team_id: t.id, status: %w[approved pending] }).distinct.count
             {
               id: t.id,
               name: t.name,
               color: t.color,
               points: t.attributes["total_points"].to_i,
-              submissions: t.attributes["submission_count"].to_i
+              submissions: t.attributes["submission_count"].to_i,
+              missions_completed: completed,
+              completion_pct: total_missions.zero? ? 0 : ((completed.to_f / total_missions) * 100).round
             }
           end
         }

@@ -53,8 +53,14 @@ class Game < ApplicationRecord
     teams
       .joins("LEFT JOIN submissions ON submissions.team_id = teams.id AND submissions.status IN ('approved','pending')")
       .group("teams.id")
-      .select("teams.*, COALESCE(SUM(submissions.points_awarded),0) AS total_points, COUNT(DISTINCT submissions.id) AS submission_count")
-      .order(Arel.sql("total_points DESC, teams.name ASC"))
+      .select(
+        "teams.*, " \
+        "COALESCE(SUM(submissions.points_awarded),0) AS total_points, " \
+        "COUNT(DISTINCT submissions.id) AS submission_count, " \
+        "MAX(submissions.created_at) AS last_submission_at"
+      )
+      # Tiebreakers: more points → more submissions → earliest last submission → name
+      .order(Arel.sql("total_points DESC, submission_count DESC, last_submission_at ASC NULLS LAST, teams.name ASC"))
   end
 
   private

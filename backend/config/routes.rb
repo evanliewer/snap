@@ -28,6 +28,7 @@ Rails.application.routes.draw do
         end
         resources :teams, only: %i[index create update destroy] do
           post :join, on: :member
+          collection { post :reorder }
         end
         resources :mission_categories, only: %i[index create update destroy], path: "categories" do
           collection { post :reorder }

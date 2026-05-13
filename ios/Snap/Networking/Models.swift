@@ -46,13 +46,16 @@ struct MeResponse: Codable {
 
 struct LeaderboardResponse: Codable {
     let gameId: Int
+    let totalMissions: Int?
     let teams: [LeaderboardTeam]
-    struct LeaderboardTeam: Codable, Identifiable {
+    struct LeaderboardTeam: Codable, Identifiable, Equatable {
         let id: Int
         let name: String
         let color: String
         let points: Int
         let submissions: Int
+        let missionsCompleted: Int?
+        let completionPct: Int?
     }
 }
 

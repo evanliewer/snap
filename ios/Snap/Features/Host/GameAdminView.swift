@@ -44,6 +44,7 @@ struct TeamsAdminView: View {
     @State private var error: String?
     @State private var editing: APITeam?
     @State private var creating = false
+    @State private var editMode: EditMode = .inactive
 
     var body: some View {
         List {
@@ -72,12 +73,24 @@ struct TeamsAdminView: View {
                         } label: { Label("Delete", systemImage: "trash") }
                     }
                 }
+                .onMove { from, to in
+                    teams.move(fromOffsets: from, toOffset: to)
+                    Task { await persistOrder() }
+                }
             }
             if let error { Text(error).foregroundStyle(.red).font(.footnote) }
         }
+        .environment(\.editMode, $editMode)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button { creating = true } label: { Image(systemName: "plus") }
+                HStack {
+                    if !teams.isEmpty {
+                        Button(editMode == .active ? "Done" : "Reorder") {
+                            editMode = (editMode == .active) ? .inactive : .active
+                        }
+                    }
+                    Button { creating = true } label: { Image(systemName: "plus") }
+                }
             }
         }
         .task { await load() }
@@ -88,6 +101,11 @@ struct TeamsAdminView: View {
         .sheet(item: $editing, onDismiss: { Task { await load() } }) { t in
             TeamEditorView(gameId: gameId, team: t)
         }
+    }
+
+    private func persistOrder() async {
+        do { try await APIClient.shared.reorderTeams(gameId: gameId, ids: teams.map(\.id)) }
+        catch { self.error = error.userMessage }
     }
 
     private func load() async {

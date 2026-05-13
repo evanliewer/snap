@@ -174,6 +174,18 @@ final class APIClient {
         _ = try await request("/api/v1/games/\(gameId)/teams/\(teamId)", method: "DELETE", body: nil as String?)
     }
 
+    func reorderTeams(gameId: Int, ids: [Int]) async throws {
+        _ = try await request("/api/v1/games/\(gameId)/teams/reorder", method: "POST", body: ["ids": ids])
+    }
+
+    func archiveGame(id: Int) async throws -> APIGame {
+        try await post("/api/v1/games/\(id)/archive", body: [String: String]())
+    }
+
+    func unarchiveGame(id: Int) async throws -> APIGame {
+        try await post("/api/v1/games/\(id)/unarchive", body: [String: String]())
+    }
+
     // MARK: Categories
 
     func categories(gameId: Int) async throws -> CategoriesResponse {
