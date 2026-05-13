@@ -26,4 +26,4 @@ class Rack::Attack
   }
 end
 
-Rails.application.config.middleware.use Rack::Attack
+# Middleware is registered in config/application.rb so it's wired early.

@@ -27,5 +27,10 @@ module Snap
     config.session_store :cookie_store, key: "_snap_session", same_site: :lax
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use config.session_store, config.session_options
+
+    # Rate-limit abusive clients. Definition lives in
+    # config/initializers/rack_attack.rb; inserting the middleware here so
+    # it's wired in early in the boot sequence.
+    config.middleware.use Rack::Attack
   end
 end
