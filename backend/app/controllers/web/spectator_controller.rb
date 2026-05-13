@@ -1,6 +1,9 @@
 module Web
   class SpectatorController < ApplicationController
+    include WebAuthentication
     layout "application"
+
+    skip_before_action :require_login
     skip_before_action :verify_authenticity_token, raise: false
 
     def show
